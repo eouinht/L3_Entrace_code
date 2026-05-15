@@ -28,6 +28,8 @@
 #define CN_DOMAIN_100 100 
 #define CN_DOMAIN_101 101
 
+#define MAX_PAGING_QUEUE 2048
+
 static int tcp_skt;
 static int udp_skt;
 struct sockaddr_in ue_addr;
@@ -42,6 +44,7 @@ static uint32_t paging_tac;
 static uint32_t paging_domain;
 
 static pthread_mutex_t paging_mtx = PTHREAD_MUTEX_INITIALIZER;
+
 
 void gnb_t(void *arg)
 {
