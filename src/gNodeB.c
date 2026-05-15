@@ -1,16 +1,18 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <unistd.h>
-#include <string.h>
 #include <arpa/inet.h>
-#include <time.h>
+#include <errno.h>
 #include <pthread.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <time.h>
+#include <unistd.h>
 
+#include "messages.h"
+#include "queue.h"
 #include "timer.h"
-#include "mib.h"
-#include "ngap.h"
-#include "rrc.h"
-
 
 #define MIB_IE1 0x01
 
@@ -21,134 +23,200 @@
 
 #define SFN_MOD 1024
 #define T 64
-#define PF_offset 0
+#define PF_OFFSET 0
 
-#define MSG_TYPE 100 //paging
-#define TAC 100 // Tracking Area
-#define CN_DOMAIN_100 100 
-#define CN_DOMAIN_101 101
-
-#define MAX_PAGING_QUEUE 2048
-
-static int tcp_skt;
-static int udp_skt;
-struct sockaddr_in ue_addr;
+static int tcp_skt = -1;
+static int udp_skt = -1;
+static struct sockaddr_in ue_addr;
 
 static uint16_t gnb_sfn = 0;
-static int tick = 0;
+static uint32_t tick_10ms = 0;
 
-static int paging_pending = 0;
-static uint32_t paging_ue_id;
+static paging_queue_t paging_q;
+static pthread_mutex_t q_mtx = PTHREAD_MUTEX_INITIALIZER;
 
-static uint32_t paging_tac;
-static uint32_t paging_domain;
+static uint64_t total_rx = 0, total_sent = 0, total_drop = 0;
+static uint64_t sec_rx = 0, sec_sent = 0, sec_drop = 0;
+static double sec_latency_ms_sum = 0.0;
 
-static pthread_mutex_t paging_mtx = PTHREAD_MUTEX_INITIALIZER;
+static volatile sig_atomic_t running = 1;
 
+static double diff_ms(const struct timespec *a, const struct timespec *b){
+    return (b->tv_sec - a->tv_sec) * 1000.0 + (b->tv_nsec - a->tv_nsec) / 1000000.0;
+}
 
-void gnb_t(void *arg)
-{
-    gnb_sfn = (gnb_sfn + 1)% SFN_MOD;
-    tick++;
+static int recv_all(int fd, void *buf, size_t len) {
+    size_t got = 0;
+    char *p = (char *)buf;
+    while (got < len) {
+        ssize_t n = recv(fd, p + got, len - got, 0);
+        if (n == 0) return 0;
+        if (n < 0) {
+            if (errno == EINTR) continue;
+            return -1;
+        }
+        got += (size_t)n;
+    }
+    return 1;
+}
 
-    if (tick % 8 == 0){
+static void send_rrc_paging(const paging_req_t *req) {
+    RRC_Paging_msg rrc;
+    rrc.message_type = htonl(MSG_TYPE_PAGING);
+    rrc.ue_id = htonl(req->ue_id);
+    rrc.tac = htonl(req->tac);
+    rrc.cn_domain = htonl(req->cn_domain);
+
+    sendto(udp_skt, &rrc, sizeof(rrc), 0,
+           (struct sockaddr *)&ue_addr, sizeof(ue_addr));
+}
+
+static void flush_paging_queue_at_pf(void) {
+    paging_req_t req;
+    struct timespec now;
+
+    while (1) {
+        pthread_mutex_lock(&q_mtx);
+        int ok = dequeue_paging(&paging_q, &req);
+        pthread_mutex_unlock(&q_mtx);
+
+        if (ok != 0) break;
+
+        send_rrc_paging(&req);
+        clock_gettime(CLOCK_MONOTONIC, &now);
+        sec_latency_ms_sum += diff_ms(&req.rx_time, &now);
+        sec_sent++;
+        total_sent++;
+    }
+}
+
+static void gnb_tick(void *arg) {
+    (void)arg;
+    gnb_sfn = (gnb_sfn + 1) % SFN_MOD;
+    tick_10ms++;
+
+    if (tick_10ms % 8 == 0) {
         MIB_msg mib;
         mib.message_id = MIB_IE1;
         mib.sfn_value = htons(gnb_sfn);
-        sendto(
-            udp_skt, 
-            &mib, 
-            sizeof(mib), 
-            0, 
-            (struct sockaddr *)&ue_addr, 
-            sizeof(ue_addr));
-        // printf("[gNodeB] Send MIB: SFN %u\n", gnb_sfn);
+        sendto(udp_skt, &mib, sizeof(mib), 0,
+               (struct sockaddr *)&ue_addr, sizeof(ue_addr));
     }
 
-    pthread_mutex_lock(&paging_mtx);
-    if (paging_pending)
-    {
-        if((gnb_sfn + PF_offset) % T == 0)
-        {
-            RRC_Paging_msg paging;
-            paging.message_type = htonl(100);
-            paging.ue_id = htonl(paging_ue_id);
-            paging.tac = htonl(TAC);
-            paging.cn_domain = htonl(CN_DOMAIN_100);
-
-            sendto(
-                udp_skt, 
-                &paging, 
-                sizeof(paging), 
-                0, 
-                (struct sockaddr*)&ue_addr, 
-                sizeof(ue_addr));
-
-            printf("[gNodeB] Send RRC paging: UE_ID=%u at SFN=%u\n", paging_ue_id, gnb_sfn);
-            paging_pending = 0; 
-        }
+    if (((gnb_sfn + PF_OFFSET) % T) == 0) {
+        flush_paging_queue_at_pf();
     }
-    pthread_mutex_unlock(&paging_mtx);
 }
 
-void *ngap_rx(void *arg)
-{
-    
-    struct sockaddr_in amf_addr;
-    socklen_t addrlen = sizeof(amf_addr);
-    printf("[gNodeB] Waiting NGAP Paging from AMF...\n");
+static void *ngap_rx_thread(void *arg) {
+    (void)arg;
+    printf("[gNB] TCP server listening AMF on port %d\n", AMF_PORT);
 
-    while(1){
-        int conn_fd = accept(tcp_skt,(struct sockaddr*)&amf_addr, &addrlen );
-        if (conn_fd < 0){
-        perror("[gNodeB] Accept");
-        continue;
+    while (running) {
+        struct sockaddr_in amf_addr;
+        socklen_t len = sizeof(amf_addr);
+        int conn_fd = accept(tcp_skt, (struct sockaddr *)&amf_addr, &len);
+        if (conn_fd < 0) {
+            if (errno == EINTR) continue;
+            perror("[gNB] accept");
+            continue;
         }
-        NGAP_Paging_msg paging;
-        recv(conn_fd, &paging, sizeof(paging), 0);
-        pthread_mutex_lock(&paging_mtx);
-        paging_ue_id  = ntohl(paging.ue_id);
-        paging_tac    = ntohl(paging.tac);
-        paging_domain = ntohl(paging.cn_domain);
-        paging_pending = 1;
-        pthread_mutex_unlock(&paging_mtx);
-        printf("[gNodeB] Rx NGAP Paging for UE_ID=%u\n", paging_ue_id);
-        close(conn_fd);
-        
-    }
 
+        printf("[gNB] AMF connected\n");
+        while (running) {
+            NGAP_Paging_msg msg;
+            int r = recv_all(conn_fd, &msg, sizeof(msg));
+            if (r <= 0) break;
+
+            uint32_t type = ntohl(msg.message_type);
+            if (type != MSG_TYPE_PAGING) continue;
+
+            paging_req_t req;
+            req.ue_id = ntohl(msg.ue_id);
+            req.tac = ntohl(msg.tac);
+            req.cn_domain = ntohl(msg.cn_domain);
+            clock_gettime(CLOCK_MONOTONIC, &req.rx_time);
+
+            pthread_mutex_lock(&q_mtx);
+            int ok = enqueue_paging(&paging_q, &req);
+            pthread_mutex_unlock(&q_mtx);
+
+            if (ok == 0) {
+                sec_rx++;
+                total_rx++;
+            } else {
+                sec_drop++;
+                total_drop++;
+            }
+        }
+        close(conn_fd);
+        printf("[gNB] AMF disconnected\n");
+    }
     return NULL;
 }
 
-int main(void){
+static void *perf_thread(void *arg) {
+    (void)arg;
+    while (running) {
+        sleep(1);
+        pthread_mutex_lock(&q_mtx);
+        int qs = queue_size(&paging_q);
+        pthread_mutex_unlock(&q_mtx);
 
-    pthread_t tid;
-    struct sockaddr_in amf_addr;
+        double avg_latency = sec_sent ? sec_latency_ms_sum / (double)sec_sent : 0.0;
+        printf("[PERF] rx=%lu msg/s | sent=%lu msg/s | drop=%lu msg/s | queue=%d | avg_latency=%.2f ms | total_rx=%lu total_sent=%lu total_drop=%lu\n",
+               sec_rx, sec_sent, sec_drop, qs, avg_latency, total_rx, total_sent, total_drop);
+
+        sec_rx = sec_sent = sec_drop = 0;
+        sec_latency_ms_sum = 0.0;
+    }
+    return NULL;
+}
+
+static void handle_sigint(int sig) {
+    (void)sig;
+    running = 0;
+    timer_stop();
+    close(tcp_skt);
+    close(udp_skt);
+}
+
+int main(void) {
+    signal(SIGINT, handle_sigint);
+    queue_init(&paging_q);
 
     udp_skt = socket(AF_INET, SOCK_DGRAM, 0);
+    if (udp_skt < 0) { perror("udp socket"); return 1; }
+
     memset(&ue_addr, 0, sizeof(ue_addr));
     ue_addr.sin_family = AF_INET;
     ue_addr.sin_port = htons(UE_PORT);
     inet_pton(AF_INET, UE_IP, &ue_addr.sin_addr);
-    
 
     tcp_skt = socket(AF_INET, SOCK_STREAM, 0);
+    if (tcp_skt < 0) { perror("tcp socket"); return 1; }
+
+    int opt = 1;
+    setsockopt(tcp_skt, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    struct sockaddr_in amf_addr;
     memset(&amf_addr, 0, sizeof(amf_addr));
     amf_addr.sin_family = AF_INET;
     amf_addr.sin_port = htons(AMF_PORT);
     amf_addr.sin_addr.s_addr = INADDR_ANY;
 
-    bind(tcp_skt, (struct sockaddr*)&amf_addr, sizeof(amf_addr));
-    listen(tcp_skt, 1);
-    printf("[gNodeB] Listening AMF on TCP Port=%d\n", AMF_PORT);
+    if (bind(tcp_skt, (struct sockaddr *)&amf_addr, sizeof(amf_addr)) < 0) {
+        perror("bind"); return 1;
+    }
+    if (listen(tcp_skt, 16) < 0) { perror("listen"); return 1; }
 
-    pthread_create(&tid, NULL, ngap_rx, NULL);
+    pthread_t rx_tid, perf_tid;
+    pthread_create(&rx_tid, NULL, ngap_rx_thread, NULL);
+    pthread_create(&perf_tid, NULL, perf_thread, NULL);
 
-    timer_init(10*1000*1000, gnb_t, NULL);
+    timer_init(10L * 1000L * 1000L, gnb_tick, NULL);
     timer_start();
 
-    while(1) pause();
-
+    while (running) pause();
     return 0;
-
 }
