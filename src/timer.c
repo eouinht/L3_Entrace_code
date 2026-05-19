@@ -63,3 +63,13 @@ void timer_stop(void){
     atomic_store(&running, 0);
     pthread_join(timer_thread, NULL);
 }
+
+void sleep_ns(long ns)
+{
+    struct timespec ts;
+
+    ts.tv_sec = ns / 1000000000L;
+    ts.tv_nsec = ns % 1000000000L;
+
+    nanosleep(&ts, NULL);
+}

@@ -1,0 +1,26 @@
+[UE 1002] Listening UDP port 5002
+[UE 1002] Initial sync | UE_SFN=8 | gNB_SFN=8
+[UE 1002] Re-sync: UE_SFN=88, gNB_SFN=88, delta_before=0, mib_total=11
+[UE 1002] RX RRC Paging at UE_SFN=128 | total_rrc=1 
+[UE 1002] Re-sync: UE_SFN=168, gNB_SFN=168, delta_before=0, mib_total=21
+[UE 1002] Re-sync: UE_SFN=248, gNB_SFN=248, delta_before=0, mib_total=31
+[UE 1002] RX RRC Paging at UE_SFN=256 | total_rrc=2 
+[UE 1002] RX RRC Paging at UE_SFN=320 | total_rrc=3 
+[UE 1002] Re-sync: UE_SFN=328, gNB_SFN=328, delta_before=0, mib_total=41
+[UE 1002] Re-sync: UE_SFN=408, gNB_SFN=408, delta_before=0, mib_total=51
+[UE 1002] RX RRC Paging at UE_SFN=448 | total_rrc=4 
+[UE 1002] Re-sync: UE_SFN=488, gNB_SFN=488, delta_before=0, mib_total=61
+[UE 1002] RX RRC Paging at UE_SFN=512 | total_rrc=5 
+[UE 1002] Re-sync: UE_SFN=568, gNB_SFN=568, delta_before=0, mib_total=71
+[UE 1002] RX RRC Paging at UE_SFN=640 | total_rrc=6 
+[UE 1002] Re-sync: UE_SFN=648, gNB_SFN=648, delta_before=0, mib_total=81
+[UE 1002] Re-sync: UE_SFN=728, gNB_SFN=728, delta_before=0, mib_total=91
+[UE 1002] RX RRC Paging at UE_SFN=768 | total_rrc=7 
+[UE 1002] Re-sync: UE_SFN=808, gNB_SFN=808, delta_before=0, mib_total=101
+[UE 1002] RX RRC Paging at UE_SFN=832 | total_rrc=8 
+[UE 1002] Re-sync: UE_SFN=888, gNB_SFN=888, delta_before=0, mib_total=111
+[UE 1002] RX RRC Paging at UE_SFN=960 | total_rrc=9 
+[UE 1002] Re-sync: UE_SFN=968, gNB_SFN=968, delta_before=0, mib_total=121
+[UE 1002] RX RRC Paging at UE_SFN=0 | total_rrc=10 
+[UE 1002] Re-sync: UE_SFN=24, gNB_SFN=24, delta_before=0, mib_total=131
+[UE 1002] Re-sync: UE_SFN=104, gNB_SFN=104, delta_before=0, mib_total=141

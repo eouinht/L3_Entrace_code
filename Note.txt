@@ -1,0 +1,91 @@
+Mô tả luồng đồng bộ MIB và giao tiếp NGAP giữa gNB và AMF
+1. Mục tiêu bài làm
+Bài làm mô phỏng một phần đơn giản của thủ tục Paging trong mạng 5G giữa ba thành phần:
+
+UE (User Equipment)
+gNodeB (gNB)
+AMF (Access and Mobility Management Function)
+
+2. Kết quả 
+
+Hai nội dung chính đã được triển khai và chạy thành công gồm:
+
+    Đồng bộ SFN giữa UE và gNB thông qua MIB. 
+        gNB
+            broadcast MIB / gửi RRC Paging
+            UE nhận (mở UDP socket, nghe packet gửi đến)
+            cho phép mở rộng lên đến 3 UE cùng đồng bộ 1 lúc (yêu cầu PORT khác nhau)
+
+    Giao tiếp NGAP Paging giữa AMF và gNB. 
+        AMF
+            AMF gửi NGAP cho GNB
+            
+
+Các nội dung chưa thực hiện:
+    UE chưa gửi bản tin phản hồi ngược lại GNB
+    AMF gửi liên tục 400-500 bản tin cho gNB và gNB nhận
+        Ý tưởng: 
+            AMF sẽ sinh bản tin NGAP liên tục 
+            GNB đọc bản tin NGAP (đọc UE_ID) ngay trong luồng nhận TCP
+            GNB đẩy vào paging queue
+            GNB sẽ đưa bản tin vào hàng đợi paging_queue
+        
+    gNB gửi RRC_PAGING cho UE:
+        Ý tưởng: 
+            Lấy bản tin Paging từ đầu QUEUE kiểm tra SFN hiện tại có đúng Paging Frame của UE không
+                Nếu đúng thì gửi 
+                Nếu không đúng:
+                    Cách 1: thì cho bản tin xuống cuối QUEUE (dễ sảy ra có bản tin không bao giờ được gửi đi)
+                    Cách 2: Sau khi nhận đầy queue thì xắp xếp bản tin trong queue theo SFN tăng dần của các UE 
+                        Sau đó kiểm tra đầu queue và gửi khi đúng SFN
+2. Kiến trúc giao tiếp
+- UE <=> gNB: UDP | GNB - UDP server | port 5000 
+- AMF <=> GNB: TCP | GNB - TCP server | port 6000
+
+3. Cơ chế đồng bộ MIB giữa UE và GNB
+    gNB duy trì một bộ đếm SFN [0, 1023]
+    SFN tăng mỗi 10ms thông qua timer thread
+
+    - Broadcast MIB 
+    Định kì mỗi 8 tick SFN (80ms) , gNB broadcast 1 bản tin MIB qua UDP 
+    Bản tin gồm: 
+        message_id 
+        sfn_value
+
+    - Đồng bộ SFN tại UE
+    mỗi UE duy trì SFM nội bộ riêng và luôn lắng nghe MIB từ gNB
+    Sau đó UE tiếp tục:
+        tự tăng SFN local,
+        định kỳ re-sync lại bằng MIB 
+
+
+4. Giao tiếp NGAP giữa AMF và GNB
+    AMF:
+        gửi yêu cầu paging tới gNB
+    gNB:
+        gNB nhận được yêu cầu này,
+        lưu thông tin paging,
+        sau đó gửi paging tới UE tại đúng Paging Frame.
+
+    Note:
+        quá trình nhận NGAP không được làm gián đoạn việc broadcast MIB,
+        hai luồng xử lý phải hoạt động song song.
+    
+5. Chạy các phần đã hoàn thiện
+Terminal 1:
+    gcc src/ue.c src/timer.c -o ue -Iinclude -lpthread
+    ./ue 1001 5001 | tee logs/ue_1001.log
+
+Terminal 2:
+     ./ue 1002 5002 | tee logs/ue_1002.log
+
+Terminal 3:
+    ./ue 1003 5003 | tee logs/ue_1003.log
+
+Terminal 4:
+    gcc src/gNodeB.c src/timer.c -o gNodeB -Iinclude -lpthread
+    ./gNodeB | tee logs/gnb.log
+
+Terminal 5:
+    gcc src/amf.c src/timer.c -o amf -Iinclude -lpthread
+    ./amf 500 10 1001 3 | tee logs/amf.log

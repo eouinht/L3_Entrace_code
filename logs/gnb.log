@@ -1,0 +1,1357 @@
+[gNB] UDP server listening on port 5000 for UE
+[gNB] TCP server listening on port 6000 for AMF
+[gNB] Started | TCP port=6000 | UDP port = 5000 | SFN timer=10ms
+[gNB Rec] NGAP receiver thread started
+[gNB Rex] Waiting for AMF connection...
+[gNB] Broadcast MIB at Port=5001 | SFN=8
+[gNB] Broadcast MIB at Port=5002 | SFN=8
+[gNB] Broadcast MIB at Port=5003 | SFN=8
+[gNB] Broadcast MIB at Port=5001 | SFN=16
+[gNB] Broadcast MIB at Port=5002 | SFN=16
+[gNB] Broadcast MIB at Port=5003 | SFN=16
+[gNB] Broadcast MIB at Port=5001 | SFN=24
+[gNB] Broadcast MIB at Port=5002 | SFN=24
+[gNB] Broadcast MIB at Port=5003 | SFN=24
+[gNB] Broadcast MIB at Port=5001 | SFN=32
+[gNB] Broadcast MIB at Port=5002 | SFN=32
+[gNB] Broadcast MIB at Port=5003 | SFN=32
+[gNB] Broadcast MIB at Port=5001 | SFN=40
+[gNB] Broadcast MIB at Port=5002 | SFN=40
+[gNB] Broadcast MIB at Port=5003 | SFN=40
+[gNB] Broadcast MIB at Port=5001 | SFN=48
+[gNB] Broadcast MIB at Port=5002 | SFN=48
+[gNB] Broadcast MIB at Port=5003 | SFN=48
+[gNB] Broadcast MIB at Port=5001 | SFN=56
+[gNB] Broadcast MIB at Port=5002 | SFN=56
+[gNB] Broadcast MIB at Port=5003 | SFN=56
+[gNB] Broadcast MIB at Port=5001 | SFN=64
+[gNB] Broadcast MIB at Port=5002 | SFN=64
+[gNB] Broadcast MIB at Port=5003 | SFN=64
+[gNB] Broadcast MIB at Port=5001 | SFN=72
+[gNB] Broadcast MIB at Port=5002 | SFN=72
+[gNB] Broadcast MIB at Port=5003 | SFN=72
+[gNB] Broadcast MIB at Port=5001 | SFN=80
+[gNB] Broadcast MIB at Port=5002 | SFN=80
+[gNB] Broadcast MIB at Port=5003 | SFN=80
+[gNB] Broadcast MIB at Port=5001 | SFN=88
+[gNB] Broadcast MIB at Port=5002 | SFN=88
+[gNB] Broadcast MIB at Port=5003 | SFN=88
+[gNB] Broadcast MIB at Port=5001 | SFN=96
+[gNB] Broadcast MIB at Port=5002 | SFN=96
+[gNB] Broadcast MIB at Port=5003 | SFN=96
+[gNB Rec] AMF connected
+
+========== PAGING QUEUE DUMP ==========
+[SFN 128] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=100
+[gNB] Broadcast MIB at Port=5001 | SFN=104
+[gNB] Broadcast MIB at Port=5002 | SFN=104
+[gNB] Broadcast MIB at Port=5003 | SFN=104
+
+========== PAGING QUEUE DUMP ==========
+[SFN 128] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=110
+[gNB] Broadcast MIB at Port=5001 | SFN=112
+[gNB] Broadcast MIB at Port=5002 | SFN=112
+[gNB] Broadcast MIB at Port=5003 | SFN=112
+[gNB] Broadcast MIB at Port=5001 | SFN=120
+[gNB] Broadcast MIB at Port=5002 | SFN=120
+[gNB] Broadcast MIB at Port=5003 | SFN=120
+
+========== PAGING QUEUE DUMP ==========
+[SFN 128] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=120
+[gNB] Broadcast MIB at Port=5001 | SFN=128
+[gNB] Broadcast MIB at Port=5002 | SFN=128
+[gNB] Broadcast MIB at Port=5003 | SFN=128
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=128
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=128
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=128
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=130
+[gNB] Broadcast MIB at Port=5001 | SFN=136
+[gNB] Broadcast MIB at Port=5002 | SFN=136
+[gNB] Broadcast MIB at Port=5003 | SFN=136
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=140
+[gNB] Broadcast MIB at Port=5001 | SFN=144
+[gNB] Broadcast MIB at Port=5002 | SFN=144
+[gNB] Broadcast MIB at Port=5003 | SFN=144
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=150
+[gNB] Broadcast MIB at Port=5001 | SFN=152
+[gNB] Broadcast MIB at Port=5002 | SFN=152
+[gNB] Broadcast MIB at Port=5003 | SFN=152
+[gNB] Broadcast MIB at Port=5001 | SFN=160
+[gNB] Broadcast MIB at Port=5002 | SFN=160
+[gNB] Broadcast MIB at Port=5003 | SFN=160
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=160
+[gNB] Broadcast MIB at Port=5001 | SFN=168
+[gNB] Broadcast MIB at Port=5002 | SFN=168
+[gNB] Broadcast MIB at Port=5003 | SFN=168
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=170
+[gNB] Broadcast MIB at Port=5001 | SFN=176
+[gNB] Broadcast MIB at Port=5002 | SFN=176
+[gNB] Broadcast MIB at Port=5003 | SFN=176
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=180
+[gNB] Broadcast MIB at Port=5001 | SFN=184
+[gNB] Broadcast MIB at Port=5002 | SFN=184
+[gNB] Broadcast MIB at Port=5003 | SFN=184
+
+========== PAGING QUEUE DUMP ==========
+[SFN 192] bucket_count=7
+TOTAL PAGING REQ = 7
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 7
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=190
+[gNB] Broadcast MIB at Port=5001 | SFN=192
+[gNB] Broadcast MIB at Port=5002 | SFN=192
+[gNB] Broadcast MIB at Port=5003 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=192
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=192
+[gNB] Broadcast MIB at Port=5001 | SFN=200
+[gNB] Broadcast MIB at Port=5002 | SFN=200
+[gNB] Broadcast MIB at Port=5003 | SFN=200
+
+========== PAGING QUEUE DUMP ==========
+[SFN 256] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=200
+[gNB] Broadcast MIB at Port=5001 | SFN=208
+[gNB] Broadcast MIB at Port=5002 | SFN=208
+[gNB] Broadcast MIB at Port=5003 | SFN=208
+
+========== PAGING QUEUE DUMP ==========
+[SFN 256] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=210
+[gNB] Broadcast MIB at Port=5001 | SFN=216
+[gNB] Broadcast MIB at Port=5002 | SFN=216
+[gNB] Broadcast MIB at Port=5003 | SFN=216
+
+========== PAGING QUEUE DUMP ==========
+[SFN 256] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=220
+[gNB] Broadcast MIB at Port=5001 | SFN=224
+[gNB] Broadcast MIB at Port=5002 | SFN=224
+[gNB] Broadcast MIB at Port=5003 | SFN=224
+
+========== PAGING QUEUE DUMP ==========
+[SFN 256] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=230
+[gNB] Broadcast MIB at Port=5001 | SFN=232
+[gNB] Broadcast MIB at Port=5002 | SFN=232
+[gNB] Broadcast MIB at Port=5003 | SFN=232
+[gNB] Broadcast MIB at Port=5001 | SFN=240
+[gNB] Broadcast MIB at Port=5002 | SFN=240
+[gNB] Broadcast MIB at Port=5003 | SFN=240
+
+========== PAGING QUEUE DUMP ==========
+[SFN 256] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=240
+[gNB] Broadcast MIB at Port=5001 | SFN=248
+[gNB] Broadcast MIB at Port=5002 | SFN=248
+[gNB] Broadcast MIB at Port=5003 | SFN=248
+
+========== PAGING QUEUE DUMP ==========
+[SFN 256] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=250
+[gNB] Broadcast MIB at Port=5001 | SFN=256
+[gNB] Broadcast MIB at Port=5002 | SFN=256
+[gNB] Broadcast MIB at Port=5003 | SFN=256
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=256
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=256
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=256
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=256
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=256
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=256
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=260
+[gNB] Broadcast MIB at Port=5001 | SFN=264
+[gNB] Broadcast MIB at Port=5002 | SFN=264
+[gNB] Broadcast MIB at Port=5003 | SFN=264
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=270
+[gNB] Broadcast MIB at Port=5001 | SFN=272
+[gNB] Broadcast MIB at Port=5002 | SFN=272
+[gNB] Broadcast MIB at Port=5003 | SFN=272
+[gNB] Broadcast MIB at Port=5001 | SFN=280
+[gNB] Broadcast MIB at Port=5002 | SFN=280
+[gNB] Broadcast MIB at Port=5003 | SFN=280
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=280
+[gNB] Broadcast MIB at Port=5001 | SFN=288
+[gNB] Broadcast MIB at Port=5002 | SFN=288
+[gNB] Broadcast MIB at Port=5003 | SFN=288
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=290
+[gNB] Broadcast MIB at Port=5001 | SFN=296
+[gNB] Broadcast MIB at Port=5002 | SFN=296
+[gNB] Broadcast MIB at Port=5003 | SFN=296
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=300
+[gNB] Broadcast MIB at Port=5001 | SFN=304
+[gNB] Broadcast MIB at Port=5002 | SFN=304
+[gNB] Broadcast MIB at Port=5003 | SFN=304
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=310
+[gNB] Broadcast MIB at Port=5001 | SFN=312
+[gNB] Broadcast MIB at Port=5002 | SFN=312
+[gNB] Broadcast MIB at Port=5003 | SFN=312
+[gNB] Broadcast MIB at Port=5001 | SFN=320
+[gNB] Broadcast MIB at Port=5002 | SFN=320
+[gNB] Broadcast MIB at Port=5003 | SFN=320
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=320
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=320
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=320
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=320
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=320
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=320
+
+========== PAGING QUEUE DUMP ==========
+[SFN 320] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=320
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=320
+[gNB] Broadcast MIB at Port=5001 | SFN=328
+[gNB] Broadcast MIB at Port=5002 | SFN=328
+[gNB] Broadcast MIB at Port=5003 | SFN=328
+
+========== PAGING QUEUE DUMP ==========
+[SFN 384] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=330
+[gNB] Broadcast MIB at Port=5001 | SFN=336
+[gNB] Broadcast MIB at Port=5002 | SFN=336
+[gNB] Broadcast MIB at Port=5003 | SFN=336
+
+========== PAGING QUEUE DUMP ==========
+[SFN 384] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=340
+[gNB] Broadcast MIB at Port=5001 | SFN=344
+[gNB] Broadcast MIB at Port=5002 | SFN=344
+[gNB] Broadcast MIB at Port=5003 | SFN=344
+
+========== PAGING QUEUE DUMP ==========
+[SFN 384] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=350
+[gNB] Broadcast MIB at Port=5001 | SFN=352
+[gNB] Broadcast MIB at Port=5002 | SFN=352
+[gNB] Broadcast MIB at Port=5003 | SFN=352
+[gNB] Broadcast MIB at Port=5001 | SFN=360
+[gNB] Broadcast MIB at Port=5002 | SFN=360
+[gNB] Broadcast MIB at Port=5003 | SFN=360
+
+========== PAGING QUEUE DUMP ==========
+[SFN 384] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=360
+[gNB] Broadcast MIB at Port=5001 | SFN=368
+[gNB] Broadcast MIB at Port=5002 | SFN=368
+[gNB] Broadcast MIB at Port=5003 | SFN=368
+
+========== PAGING QUEUE DUMP ==========
+[SFN 384] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=370
+[gNB] Broadcast MIB at Port=5001 | SFN=376
+[gNB] Broadcast MIB at Port=5002 | SFN=376
+[gNB] Broadcast MIB at Port=5003 | SFN=376
+
+========== PAGING QUEUE DUMP ==========
+[SFN 384] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=380
+[gNB] Broadcast MIB at Port=5001 | SFN=384
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=384
+[gNB] Broadcast MIB at Port=5002 | SFN=384
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=384
+[gNB] Broadcast MIB at Port=5003 | SFN=384
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=384
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=384
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=384
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=384
+
+========== PAGING QUEUE DUMP ==========
+[SFN 448] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=390
+[gNB] Broadcast MIB at Port=5001 | SFN=392
+[gNB] Broadcast MIB at Port=5002 | SFN=392
+[gNB] Broadcast MIB at Port=5003 | SFN=392
+[gNB] Broadcast MIB at Port=5001 | SFN=400
+[gNB] Broadcast MIB at Port=5002 | SFN=400
+[gNB] Broadcast MIB at Port=5003 | SFN=400
+
+========== PAGING QUEUE DUMP ==========
+[SFN 448] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=400
+[gNB] Broadcast MIB at Port=5001 | SFN=408
+[gNB] Broadcast MIB at Port=5002 | SFN=408
+[gNB] Broadcast MIB at Port=5003 | SFN=408
+
+========== PAGING QUEUE DUMP ==========
+[SFN 448] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=410
+[gNB] Broadcast MIB at Port=5001 | SFN=416
+[gNB] Broadcast MIB at Port=5002 | SFN=416
+[gNB] Broadcast MIB at Port=5003 | SFN=416
+
+========== PAGING QUEUE DUMP ==========
+[SFN 448] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=420
+[gNB] Broadcast MIB at Port=5001 | SFN=424
+[gNB] Broadcast MIB at Port=5002 | SFN=424
+[gNB] Broadcast MIB at Port=5003 | SFN=424
+
+========== PAGING QUEUE DUMP ==========
+[SFN 448] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=430
+[gNB] Broadcast MIB at Port=5001 | SFN=432
+[gNB] Broadcast MIB at Port=5002 | SFN=432
+[gNB] Broadcast MIB at Port=5003 | SFN=432
+[gNB] Broadcast MIB at Port=5001 | SFN=440
+[gNB] Broadcast MIB at Port=5002 | SFN=440
+[gNB] Broadcast MIB at Port=5003 | SFN=440
+
+========== PAGING QUEUE DUMP ==========
+[SFN 448] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=440
+[gNB] Broadcast MIB at Port=5001 | SFN=448
+[gNB] Broadcast MIB at Port=5002 | SFN=448
+[gNB] Broadcast MIB at Port=5003 | SFN=448
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=448
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=448
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=448
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=448
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=448
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=448
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=450
+[gNB] Broadcast MIB at Port=5001 | SFN=456
+[gNB] Broadcast MIB at Port=5002 | SFN=456
+[gNB] Broadcast MIB at Port=5003 | SFN=456
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=460
+[gNB] Broadcast MIB at Port=5001 | SFN=464
+[gNB] Broadcast MIB at Port=5002 | SFN=464
+[gNB] Broadcast MIB at Port=5003 | SFN=464
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=470
+[gNB] Broadcast MIB at Port=5001 | SFN=472
+[gNB] Broadcast MIB at Port=5002 | SFN=472
+[gNB] Broadcast MIB at Port=5003 | SFN=472
+[gNB] Broadcast MIB at Port=5001 | SFN=480
+[gNB] Broadcast MIB at Port=5002 | SFN=480
+[gNB] Broadcast MIB at Port=5003 | SFN=480
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=480
+[gNB] Broadcast MIB at Port=5001 | SFN=488
+[gNB] Broadcast MIB at Port=5002 | SFN=488
+[gNB] Broadcast MIB at Port=5003 | SFN=488
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=490
+[gNB] Broadcast MIB at Port=5001 | SFN=496
+[gNB] Broadcast MIB at Port=5002 | SFN=496
+[gNB] Broadcast MIB at Port=5003 | SFN=496
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=500
+[gNB] Broadcast MIB at Port=5001 | SFN=504
+[gNB] Broadcast MIB at Port=5002 | SFN=504
+[gNB] Broadcast MIB at Port=5003 | SFN=504
+
+========== PAGING QUEUE DUMP ==========
+[SFN 512] bucket_count=7
+TOTAL PAGING REQ = 7
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 7
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=510
+[gNB] Broadcast MIB at Port=5001 | SFN=512
+[gNB] Broadcast MIB at Port=5002 | SFN=512
+[gNB] Broadcast MIB at Port=5003 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=512
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=512
+[gNB] Broadcast MIB at Port=5001 | SFN=520
+[gNB] Broadcast MIB at Port=5002 | SFN=520
+[gNB] Broadcast MIB at Port=5003 | SFN=520
+
+========== PAGING QUEUE DUMP ==========
+[SFN 576] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=520
+[gNB] Broadcast MIB at Port=5001 | SFN=528
+[gNB] Broadcast MIB at Port=5002 | SFN=528
+[gNB] Broadcast MIB at Port=5003 | SFN=528
+
+========== PAGING QUEUE DUMP ==========
+[SFN 576] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=530
+[gNB] Broadcast MIB at Port=5001 | SFN=536
+[gNB] Broadcast MIB at Port=5002 | SFN=536
+[gNB] Broadcast MIB at Port=5003 | SFN=536
+
+========== PAGING QUEUE DUMP ==========
+[SFN 576] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=541
+[gNB] Broadcast MIB at Port=5001 | SFN=544
+[gNB] Broadcast MIB at Port=5002 | SFN=544
+[gNB] Broadcast MIB at Port=5003 | SFN=544
+
+========== PAGING QUEUE DUMP ==========
+[SFN 576] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=551
+[gNB] Broadcast MIB at Port=5001 | SFN=552
+[gNB] Broadcast MIB at Port=5002 | SFN=552
+[gNB] Broadcast MIB at Port=5003 | SFN=552
+[gNB] Broadcast MIB at Port=5001 | SFN=560
+[gNB] Broadcast MIB at Port=5002 | SFN=560
+[gNB] Broadcast MIB at Port=5003 | SFN=560
+
+========== PAGING QUEUE DUMP ==========
+[SFN 576] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=561
+[gNB] Broadcast MIB at Port=5001 | SFN=568
+[gNB] Broadcast MIB at Port=5002 | SFN=568
+[gNB] Broadcast MIB at Port=5003 | SFN=568
+
+========== PAGING QUEUE DUMP ==========
+[SFN 576] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=571
+[gNB] Broadcast MIB at Port=5001 | SFN=576
+[gNB] Broadcast MIB at Port=5002 | SFN=576
+[gNB] Broadcast MIB at Port=5003 | SFN=576
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=576
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=576
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=576
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=576
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=576
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=576
+
+========== PAGING QUEUE DUMP ==========
+[SFN 640] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=581
+[gNB] Broadcast MIB at Port=5001 | SFN=584
+[gNB] Broadcast MIB at Port=5002 | SFN=584
+[gNB] Broadcast MIB at Port=5003 | SFN=584
+
+========== PAGING QUEUE DUMP ==========
+[SFN 640] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=591
+[gNB] Broadcast MIB at Port=5001 | SFN=592
+[gNB] Broadcast MIB at Port=5002 | SFN=592
+[gNB] Broadcast MIB at Port=5003 | SFN=592
+[gNB] Broadcast MIB at Port=5001 | SFN=600
+[gNB] Broadcast MIB at Port=5002 | SFN=600
+[gNB] Broadcast MIB at Port=5003 | SFN=600
+
+========== PAGING QUEUE DUMP ==========
+[SFN 640] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=601
+[gNB] Broadcast MIB at Port=5001 | SFN=608
+[gNB] Broadcast MIB at Port=5002 | SFN=608
+[gNB] Broadcast MIB at Port=5003 | SFN=608
+
+========== PAGING QUEUE DUMP ==========
+[SFN 640] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=611
+[gNB] Broadcast MIB at Port=5001 | SFN=616
+[gNB] Broadcast MIB at Port=5002 | SFN=616
+[gNB] Broadcast MIB at Port=5003 | SFN=616
+
+========== PAGING QUEUE DUMP ==========
+[SFN 640] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=621
+[gNB] Broadcast MIB at Port=5001 | SFN=624
+[gNB] Broadcast MIB at Port=5002 | SFN=624
+[gNB] Broadcast MIB at Port=5003 | SFN=624
+
+========== PAGING QUEUE DUMP ==========
+[SFN 640] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=631
+[gNB] Broadcast MIB at Port=5001 | SFN=632
+[gNB] Broadcast MIB at Port=5002 | SFN=632
+[gNB] Broadcast MIB at Port=5003 | SFN=632
+[gNB] Broadcast MIB at Port=5001 | SFN=640
+[gNB] Broadcast MIB at Port=5002 | SFN=640
+[gNB] Broadcast MIB at Port=5003 | SFN=640
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=640
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=640
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=640
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=640
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=640
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=640
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=641
+[gNB] Broadcast MIB at Port=5001 | SFN=648
+[gNB] Broadcast MIB at Port=5002 | SFN=648
+[gNB] Broadcast MIB at Port=5003 | SFN=648
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=651
+[gNB] Broadcast MIB at Port=5001 | SFN=656
+[gNB] Broadcast MIB at Port=5002 | SFN=656
+[gNB] Broadcast MIB at Port=5003 | SFN=656
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=661
+[gNB] Broadcast MIB at Port=5001 | SFN=664
+[gNB] Broadcast MIB at Port=5002 | SFN=664
+[gNB] Broadcast MIB at Port=5003 | SFN=664
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=671
+[gNB] Broadcast MIB at Port=5001 | SFN=672
+[gNB] Broadcast MIB at Port=5002 | SFN=672
+[gNB] Broadcast MIB at Port=5003 | SFN=672
+[gNB] Broadcast MIB at Port=5001 | SFN=680
+[gNB] Broadcast MIB at Port=5002 | SFN=680
+[gNB] Broadcast MIB at Port=5003 | SFN=680
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=681
+[gNB] Broadcast MIB at Port=5001 | SFN=688
+[gNB] Broadcast MIB at Port=5002 | SFN=688
+[gNB] Broadcast MIB at Port=5003 | SFN=688
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=691
+[gNB] Broadcast MIB at Port=5001 | SFN=696
+[gNB] Broadcast MIB at Port=5002 | SFN=696
+[gNB] Broadcast MIB at Port=5003 | SFN=696
+
+========== PAGING QUEUE DUMP ==========
+[SFN 704] bucket_count=7
+TOTAL PAGING REQ = 7
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 7
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=701
+[gNB] Broadcast MIB at Port=5001 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=704
+[gNB] Broadcast MIB at Port=5002 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=704
+[gNB] Broadcast MIB at Port=5003 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=704
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=704
+
+========== PAGING QUEUE DUMP ==========
+[SFN 768] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=711
+[gNB] Broadcast MIB at Port=5001 | SFN=712
+[gNB] Broadcast MIB at Port=5002 | SFN=712
+[gNB] Broadcast MIB at Port=5003 | SFN=712
+[gNB] Broadcast MIB at Port=5001 | SFN=720
+[gNB] Broadcast MIB at Port=5002 | SFN=720
+[gNB] Broadcast MIB at Port=5003 | SFN=720
+
+========== PAGING QUEUE DUMP ==========
+[SFN 768] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=721
+[gNB] Broadcast MIB at Port=5001 | SFN=728
+[gNB] Broadcast MIB at Port=5002 | SFN=728
+[gNB] Broadcast MIB at Port=5003 | SFN=728
+
+========== PAGING QUEUE DUMP ==========
+[SFN 768] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=731
+[gNB] Broadcast MIB at Port=5001 | SFN=736
+[gNB] Broadcast MIB at Port=5002 | SFN=736
+[gNB] Broadcast MIB at Port=5003 | SFN=736
+
+========== PAGING QUEUE DUMP ==========
+[SFN 768] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=741
+[gNB] Broadcast MIB at Port=5001 | SFN=744
+[gNB] Broadcast MIB at Port=5002 | SFN=744
+[gNB] Broadcast MIB at Port=5003 | SFN=744
+
+========== PAGING QUEUE DUMP ==========
+[SFN 768] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=751
+[gNB] Broadcast MIB at Port=5001 | SFN=752
+[gNB] Broadcast MIB at Port=5002 | SFN=752
+[gNB] Broadcast MIB at Port=5003 | SFN=752
+[gNB] Broadcast MIB at Port=5001 | SFN=760
+[gNB] Broadcast MIB at Port=5002 | SFN=760
+[gNB] Broadcast MIB at Port=5003 | SFN=760
+
+========== PAGING QUEUE DUMP ==========
+[SFN 768] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=761
+[gNB] Broadcast MIB at Port=5001 | SFN=768
+[gNB] Broadcast MIB at Port=5002 | SFN=768
+[gNB] Broadcast MIB at Port=5003 | SFN=768
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=768
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=768
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=768
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=768
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=768
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=768
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=771
+[gNB] Broadcast MIB at Port=5001 | SFN=776
+[gNB] Broadcast MIB at Port=5002 | SFN=776
+[gNB] Broadcast MIB at Port=5003 | SFN=776
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=781
+[gNB] Broadcast MIB at Port=5001 | SFN=784
+[gNB] Broadcast MIB at Port=5002 | SFN=784
+[gNB] Broadcast MIB at Port=5003 | SFN=784
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=791
+[gNB] Broadcast MIB at Port=5001 | SFN=792
+[gNB] Broadcast MIB at Port=5002 | SFN=792
+[gNB] Broadcast MIB at Port=5003 | SFN=792
+[gNB] Broadcast MIB at Port=5001 | SFN=800
+[gNB] Broadcast MIB at Port=5002 | SFN=800
+[gNB] Broadcast MIB at Port=5003 | SFN=800
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=801
+[gNB] Broadcast MIB at Port=5001 | SFN=808
+[gNB] Broadcast MIB at Port=5002 | SFN=808
+[gNB] Broadcast MIB at Port=5003 | SFN=808
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=811
+[gNB] Broadcast MIB at Port=5001 | SFN=816
+[gNB] Broadcast MIB at Port=5002 | SFN=816
+[gNB] Broadcast MIB at Port=5003 | SFN=816
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=821
+[gNB] Broadcast MIB at Port=5001 | SFN=824
+[gNB] Broadcast MIB at Port=5002 | SFN=824
+[gNB] Broadcast MIB at Port=5003 | SFN=824
+
+========== PAGING QUEUE DUMP ==========
+[SFN 832] bucket_count=7
+TOTAL PAGING REQ = 7
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 7
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=831
+[gNB] Broadcast MIB at Port=5001 | SFN=832
+[gNB] Broadcast MIB at Port=5002 | SFN=832
+[gNB] Broadcast MIB at Port=5003 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=832
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=832
+[gNB] Broadcast MIB at Port=5001 | SFN=840
+[gNB] Broadcast MIB at Port=5002 | SFN=840
+[gNB] Broadcast MIB at Port=5003 | SFN=840
+
+========== PAGING QUEUE DUMP ==========
+[SFN 896] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=841
+[gNB] Broadcast MIB at Port=5001 | SFN=848
+[gNB] Broadcast MIB at Port=5002 | SFN=848
+[gNB] Broadcast MIB at Port=5003 | SFN=848
+
+========== PAGING QUEUE DUMP ==========
+[SFN 896] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=851
+[gNB] Broadcast MIB at Port=5001 | SFN=856
+[gNB] Broadcast MIB at Port=5002 | SFN=856
+[gNB] Broadcast MIB at Port=5003 | SFN=856
+
+========== PAGING QUEUE DUMP ==========
+[SFN 896] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=861
+[gNB] Broadcast MIB at Port=5001 | SFN=864
+[gNB] Broadcast MIB at Port=5002 | SFN=864
+[gNB] Broadcast MIB at Port=5003 | SFN=864
+
+========== PAGING QUEUE DUMP ==========
+[SFN 896] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=871
+[gNB] Broadcast MIB at Port=5001 | SFN=872
+[gNB] Broadcast MIB at Port=5002 | SFN=872
+[gNB] Broadcast MIB at Port=5003 | SFN=872
+[gNB] Broadcast MIB at Port=5001 | SFN=880
+[gNB] Broadcast MIB at Port=5002 | SFN=880
+[gNB] Broadcast MIB at Port=5003 | SFN=880
+
+========== PAGING QUEUE DUMP ==========
+[SFN 896] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=881
+[gNB] Broadcast MIB at Port=5001 | SFN=888
+[gNB] Broadcast MIB at Port=5002 | SFN=888
+[gNB] Broadcast MIB at Port=5003 | SFN=888
+
+========== PAGING QUEUE DUMP ==========
+[SFN 896] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=891
+[gNB] Broadcast MIB at Port=5001 | SFN=896
+[gNB] Broadcast MIB at Port=5002 | SFN=896
+[gNB] Broadcast MIB at Port=5003 | SFN=896
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=896
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=896
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=896
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=896
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=896
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=896
+
+========== PAGING QUEUE DUMP ==========
+[SFN 960] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=901
+[gNB] Broadcast MIB at Port=5001 | SFN=904
+[gNB] Broadcast MIB at Port=5002 | SFN=904
+[gNB] Broadcast MIB at Port=5003 | SFN=904
+
+========== PAGING QUEUE DUMP ==========
+[SFN 960] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=911
+[gNB] Broadcast MIB at Port=5001 | SFN=912
+[gNB] Broadcast MIB at Port=5002 | SFN=912
+[gNB] Broadcast MIB at Port=5003 | SFN=912
+[gNB] Broadcast MIB at Port=5001 | SFN=920
+[gNB] Broadcast MIB at Port=5002 | SFN=920
+[gNB] Broadcast MIB at Port=5003 | SFN=920
+
+========== PAGING QUEUE DUMP ==========
+[SFN 960] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=921
+[gNB] Broadcast MIB at Port=5001 | SFN=928
+[gNB] Broadcast MIB at Port=5002 | SFN=928
+[gNB] Broadcast MIB at Port=5003 | SFN=928
+
+========== PAGING QUEUE DUMP ==========
+[SFN 960] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=931
+[gNB] Broadcast MIB at Port=5001 | SFN=936
+[gNB] Broadcast MIB at Port=5002 | SFN=936
+[gNB] Broadcast MIB at Port=5003 | SFN=936
+
+========== PAGING QUEUE DUMP ==========
+[SFN 960] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=941
+[gNB] Broadcast MIB at Port=5001 | SFN=944
+[gNB] Broadcast MIB at Port=5002 | SFN=944
+[gNB] Broadcast MIB at Port=5003 | SFN=944
+
+========== PAGING QUEUE DUMP ==========
+[SFN 960] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=951
+[gNB] Broadcast MIB at Port=5001 | SFN=952
+[gNB] Broadcast MIB at Port=5002 | SFN=952
+[gNB] Broadcast MIB at Port=5003 | SFN=952
+[gNB] Broadcast MIB at Port=5001 | SFN=960
+[gNB] Broadcast MIB at Port=5002 | SFN=960
+[gNB] Broadcast MIB at Port=5003 | SFN=960
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=960
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=960
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=960
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=960
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=960
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=960
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=962
+[gNB] Broadcast MIB at Port=5001 | SFN=968
+[gNB] Broadcast MIB at Port=5002 | SFN=968
+[gNB] Broadcast MIB at Port=5003 | SFN=968
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=972
+[gNB] Broadcast MIB at Port=5001 | SFN=976
+[gNB] Broadcast MIB at Port=5002 | SFN=976
+[gNB] Broadcast MIB at Port=5003 | SFN=976
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=982
+[gNB] Broadcast MIB at Port=5001 | SFN=984
+[gNB] Broadcast MIB at Port=5002 | SFN=984
+[gNB] Broadcast MIB at Port=5003 | SFN=984
+[gNB] Broadcast MIB at Port=5001 | SFN=992
+[gNB] Broadcast MIB at Port=5002 | SFN=992
+[gNB] Broadcast MIB at Port=5003 | SFN=992
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=992
+[gNB] Broadcast MIB at Port=5001 | SFN=1000
+[gNB] Broadcast MIB at Port=5002 | SFN=1000
+[gNB] Broadcast MIB at Port=5003 | SFN=1000
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1001 | current_sfn=1002
+[gNB] Broadcast MIB at Port=5001 | SFN=1008
+[gNB] Broadcast MIB at Port=5002 | SFN=1008
+[gNB] Broadcast MIB at Port=5003 | SFN=1008
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1002 | current_sfn=1012
+[gNB] Broadcast MIB at Port=5001 | SFN=1016
+[gNB] Broadcast MIB at Port=5002 | SFN=1016
+[gNB] Broadcast MIB at Port=5003 | SFN=1016
+
+========== PAGING QUEUE DUMP ==========
+[SFN 0] bucket_count=7
+TOTAL PAGING REQ = 7
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 7
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1003 | current_sfn=1022
+[gNB] Broadcast MIB at Port=5001 | SFN=0
+[gNB] Broadcast MIB at Port=5002 | SFN=0
+[gNB] Broadcast MIB at Port=5003 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1010 | port=5010 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1001 | port=5001 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1002 | port=5002 | SFN=0
+[gNB Send] Send RRC Paging | UE_ID=1003 | port=5003 | SFN=0
+[gNB] Broadcast MIB at Port=5001 | SFN=8
+[gNB] Broadcast MIB at Port=5002 | SFN=8
+[gNB] Broadcast MIB at Port=5003 | SFN=8
+
+========== PAGING QUEUE DUMP ==========
+[SFN 64] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1004 | current_sfn=8
+[gNB] Broadcast MIB at Port=5001 | SFN=16
+[gNB] Broadcast MIB at Port=5002 | SFN=16
+[gNB] Broadcast MIB at Port=5003 | SFN=16
+
+========== PAGING QUEUE DUMP ==========
+[SFN 64] bucket_count=2
+TOTAL PAGING REQ = 2
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 2
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1005 | current_sfn=18
+[gNB] Broadcast MIB at Port=5001 | SFN=24
+[gNB] Broadcast MIB at Port=5002 | SFN=24
+[gNB] Broadcast MIB at Port=5003 | SFN=24
+
+========== PAGING QUEUE DUMP ==========
+[SFN 64] bucket_count=3
+TOTAL PAGING REQ = 3
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 3
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1006 | current_sfn=28
+[gNB] Broadcast MIB at Port=5001 | SFN=32
+[gNB] Broadcast MIB at Port=5002 | SFN=32
+[gNB] Broadcast MIB at Port=5003 | SFN=32
+
+========== PAGING QUEUE DUMP ==========
+[SFN 64] bucket_count=4
+TOTAL PAGING REQ = 4
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 4
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1007 | current_sfn=38
+[gNB] Broadcast MIB at Port=5001 | SFN=40
+[gNB] Broadcast MIB at Port=5002 | SFN=40
+[gNB] Broadcast MIB at Port=5003 | SFN=40
+[gNB] Broadcast MIB at Port=5001 | SFN=48
+[gNB] Broadcast MIB at Port=5002 | SFN=48
+[gNB] Broadcast MIB at Port=5003 | SFN=48
+
+========== PAGING QUEUE DUMP ==========
+[SFN 64] bucket_count=5
+TOTAL PAGING REQ = 5
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 5
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1008 | current_sfn=48
+[gNB] Broadcast MIB at Port=5001 | SFN=56
+[gNB] Broadcast MIB at Port=5002 | SFN=56
+[gNB] Broadcast MIB at Port=5003 | SFN=56
+
+========== PAGING QUEUE DUMP ==========
+[SFN 64] bucket_count=6
+TOTAL PAGING REQ = 6
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 6
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1009 | current_sfn=58
+[gNB] Broadcast MIB at Port=5001 | SFN=64
+[gNB] Broadcast MIB at Port=5002 | SFN=64
+[gNB] Broadcast MIB at Port=5003 | SFN=64
+[gNB Send] Send RRC Paging | UE_ID=1004 | port=5004 | SFN=64
+[gNB Send] Send RRC Paging | UE_ID=1005 | port=5005 | SFN=64
+[gNB Send] Send RRC Paging | UE_ID=1006 | port=5006 | SFN=64
+[gNB Send] Send RRC Paging | UE_ID=1007 | port=5007 | SFN=64
+[gNB Send] Send RRC Paging | UE_ID=1008 | port=5008 | SFN=64
+[gNB Send] Send RRC Paging | UE_ID=1009 | port=5009 | SFN=64
+
+========== PAGING QUEUE DUMP ==========
+[SFN 128] bucket_count=1
+TOTAL PAGING REQ = 1
+[QUEUE][DEBUG]TOTAL PAGING IN QUEUE = 1
+=======================================
+
+[gNB Rec] RX NGAP Paging from AMF | UE_ID=1010 | current_sfn=68
+[gNB] Broadcast MIB at Port=5001 | SFN=72
+[gNB] Broadcast MIB at Port=5002 | SFN=72
+[gNB] Broadcast MIB at Port=5003 | SFN=72
+[gNB Rec] AMF disconnected
+[gNB] Broadcast MIB at Port=5001 | SFN=80
+[gNB] Broadcast MIB at Port=5002 | SFN=80
+[gNB] Broadcast MIB at Port=5003 | SFN=80
+[gNB] Broadcast MIB at Port=5001 | SFN=88
+[gNB] Broadcast MIB at Port=5002 | SFN=88
+[gNB] Broadcast MIB at Port=5003 | SFN=88
+[gNB] Broadcast MIB at Port=5001 | SFN=96
+[gNB] Broadcast MIB at Port=5002 | SFN=96
+[gNB] Broadcast MIB at Port=5003 | SFN=96
+[gNB] Broadcast MIB at Port=5001 | SFN=104
+[gNB] Broadcast MIB at Port=5002 | SFN=104
+[gNB] Broadcast MIB at Port=5003 | SFN=104
+[gNB] Broadcast MIB at Port=5001 | SFN=112
+[gNB] Broadcast MIB at Port=5002 | SFN=112
+[gNB] Broadcast MIB at Port=5003 | SFN=112
+[gNB] Broadcast MIB at Port=5001 | SFN=120
+[gNB] Broadcast MIB at Port=5002 | SFN=120
+[gNB] Broadcast MIB at Port=5003 | SFN=120
+[gNB] Broadcast MIB at Port=5001 | SFN=128
+[gNB] Broadcast MIB at Port=5002 | SFN=128
+[gNB] Broadcast MIB at Port=5003 | SFN=128
+[gNB] Broadcast MIB at Port=5001 | SFN=136
+[gNB] Broadcast MIB at Port=5002 | SFN=136
+[gNB] Broadcast MIB at Port=5003 | SFN=136
+[gNB] Broadcast MIB at Port=5001 | SFN=144
+[gNB] Broadcast MIB at Port=5002 | SFN=144
+[gNB] Broadcast MIB at Port=5003 | SFN=144
+[gNB] Broadcast MIB at Port=5001 | SFN=152
+[gNB] Broadcast MIB at Port=5002 | SFN=152
+[gNB] Broadcast MIB at Port=5003 | SFN=152
+[gNB] Broadcast MIB at Port=5001 | SFN=160
+[gNB] Broadcast MIB at Port=5002 | SFN=160
+[gNB] Broadcast MIB at Port=5003 | SFN=160
+[gNB] Broadcast MIB at Port=5001 | SFN=168
+[gNB] Broadcast MIB at Port=5002 | SFN=168
+[gNB] Broadcast MIB at Port=5003 | SFN=168
+[gNB] Broadcast MIB at Port=5001 | SFN=176
+[gNB] Broadcast MIB at Port=5002 | SFN=176
+[gNB] Broadcast MIB at Port=5003 | SFN=176
+[gNB] EXIT

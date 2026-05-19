@@ -6,26 +6,32 @@
 #include <time.h>
 
 #define MAX_PAGING_QUEUE 8192
+#define MAX_REQ_PER_SFN 128
+#define SFN_MOD 1024
 
-typedef struct {
+typedef struct{
+    uint32_t message_type;
     uint32_t ue_id;
     uint32_t tac;
     uint32_t cn_domain;
-    struct timespec rx_time;
-} paging_req_t;
+    uint16_t sfn_to_send;
+} __attribute__((packed)) paging_req_t;
 
 typedef struct {
-    paging_req_t storage[MAX_PAGING_QUEUE];
-    int front;
-    int rear;
-    int count;
-} paging_queue_t;
+    paging_req_t items[MAX_REQ_PER_SFN];
+    uint32_t count;
+} paging_bucket_t;
+
+typedef struct {
+    paging_bucket_t buckets[SFN_MOD];
+}paging_queue_t;
 
 void queue_init(paging_queue_t *q);
-bool queue_is_empty(const paging_queue_t *q);
-bool queue_is_full(const paging_queue_t *q);
+bool queue_is_empty_at_sfn(const paging_queue_t *q, uint16_t sfn);
+bool queue_is_full_at_sfn(const paging_queue_t *q, uint16_t sfn);
 int enqueue_paging(paging_queue_t *q, const paging_req_t *req);
-int dequeue_paging(paging_queue_t *q, paging_req_t *req);
-int queue_size(const paging_queue_t *q);
-
+int dequeue_paging_at_sfn(paging_queue_t *q, paging_req_t *out, uint16_t sfn, uint32_t max_out);
+uint32_t queue_size_at_sfn(const paging_queue_t *q, uint16_t sfn);
+uint32_t queue_total_size(const paging_queue_t *q);
+void queue_dump(const paging_queue_t *q);
 #endif
