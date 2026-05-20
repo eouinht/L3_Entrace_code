@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <time.h>
 #include <unistd.h>
 
 #include "messages.h"
+#include "timer.h"
 
 #define GNB_IP "127.0.0.1"
 #define GNB_TCP_PORT 6000
@@ -18,15 +18,7 @@
 #define UE_ID_BASE 1000u
 #define DEFAULT_NUM_UE 3u
 
-static void sleep_ns(long ns)
-{
-    struct timespec ts;
 
-    ts.tv_sec = ns / 1000000000L;
-    ts.tv_nsec = ns % 1000000000L;
-
-    nanosleep(&ts, NULL);
-}
 
 static int connect_to_gnb(void)
 {
@@ -69,22 +61,61 @@ static int send_ngap_paging(int tcp_skt, uint32_t ue_id)
     msg.cn_domain =htonl(CN_DOMAIN_DATA);
 
     ssize_t sent = send(tcp_skt, &msg, sizeof(msg), 0);
-    if (sent != (ssize_t)sizeof(msg)) {
-        perror("[AMF] send");
+    if(sent < 0){ 
+        perror("[AMF] Senf NGAP Paging");
         return -1;
+    }
+    if (sent != (ssize_t)sizeof(msg)) {
+        printf("[AMF] Warning: sent %zd/%zu bytes\n",
+               sent,
+               sizeof(msg));
+        return -1;      
     }
 
     return 0;
 }
+/*
+ * ============================================================
+ * Single mode
+ * ============================================================
+ *
+ * Chạy 1 lần cho 1 UE.
+ *
+ * Cách chạy:
+ *      ./amf
+ *      ./amf 1005
+ */
 
 static void run_single_mode(int tcp_skt, uint32_t ue_id)
 {
     printf("[AMF] Single NGAP Paging mode\n");
-    
-
     send_ngap_paging(tcp_skt, ue_id);
     printf("[AMF] Send NGAP Paging | UE_ID=%u\n", ue_id);
 }
+
+
+/*
+ * ============================================================
+ * Load mode
+ * ============================================================
+ *
+ * Cách chạy:
+ *      ./amf <rate> <duration_sec> <start_ue_id> <num_ue>
+ *
+ * Ví dụ:
+ *      ./amf 10 60 1001 10
+ *
+ * Nghĩa là:
+ *      rate        = 10 msg/s
+ *      duration    = 60 giây
+ *      start_ue_id = 1001
+ *      num_ue      = 10
+ *
+ * UE_ID sẽ quay vòng:
+ *      1001, 1002, ..., 1010,
+ *      1001, 1002, ..., 1010,
+ *      ...
+ */
 
 static void run_load_mode(
     int tcp_skt,
@@ -94,11 +125,20 @@ static void run_load_mode(
     uint32_t num_ue
 )
 {
+    if (rate == 0) {
+        printf("[AMF] Invalid rate=0\n");
+        return;
+    }
+
+    if (num_ue == 0) {
+        printf("[AMF] Invalid num_ue=0\n");
+        return;
+    }
     uint64_t total = (uint64_t)rate * duration_sec;
     long interval_ns = 1000000000L / rate;
 
     printf("[AMF] Load mode\n");
-    printf("[AMF] rate=%u msg/s | duration=%u s | total=%lu\n",
+    printf("[AMF] rate=%d msg/s | duration=%d s | total=%ld\n",
            rate, duration_sec, total);
 
     for (uint64_t i = 0; i < total; i++) {
@@ -107,11 +147,27 @@ static void run_load_mode(
         if (send_ngap_paging(tcp_skt, ue_id) < 0) {
             break;
         }
-
         printf("[AMF] Send NGAP Paging | UE_ID=%u\n", ue_id);
-
         sleep_ns(interval_ns);
     }
+}
+
+static void print_usage(const char *prog)
+{
+    printf("Usage:\n");
+    printf("  %s\n", prog);
+    printf("      Send one NGAP Paging to default UE_ID=%u\n",
+           DEFAULT_UE_ID);
+
+    printf("  %s <ue_id>\n", prog);
+    printf("      Send one NGAP Paging to given UE_ID\n");
+
+    printf("  %s <rate> <duration_sec> [start_ue_id] [num_ue]\n", prog);
+    printf("      Run load mode\n");
+
+    printf("\nExamples:\n");
+    printf("  %s 1005\n", prog);
+    printf("  %s 10 60 1001 10\n", prog);
 }
 
 int main(int argc, char **argv)

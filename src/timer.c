@@ -8,7 +8,7 @@
 
 static pthread_t timer_thread;
 
-static long preiod_ns;
+static long period_ns;
 static timer_cb callback;
 static void *cb_arg;
 
@@ -28,7 +28,7 @@ static void *timer_loop(void *arg){
 
     clock_gettime(CLOCK_MONOTONIC, &next);
     while(atomic_load(&running)){
-        timespec_add_ns(&next, preiod_ns);
+        timespec_add_ns(&next, period_ns);
         clock_nanosleep(
             CLOCK_MONOTONIC,
             TIMER_ABSTIME,
@@ -44,7 +44,7 @@ static void *timer_loop(void *arg){
 }
 
 int timer_init(long p_ns, timer_cb cb, void* arg){
-    preiod_ns = p_ns;
+    period_ns = p_ns;
     callback = cb;
     cb_arg = arg;
     return 0;
