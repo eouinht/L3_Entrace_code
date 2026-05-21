@@ -11,7 +11,7 @@
 #define LOCAL_IP "127.0.0.1"
 
 #define T 64
-#define N 1
+#define N 16
 #define PF_OFFSET 0
 
 #define UE_ID_BASE 1000

@@ -13,7 +13,7 @@ bool queue_is_empty_at_sfn(const paging_queue_t *q, uint16_t sfn) {
 }
 
 bool queue_is_full_at_sfn(const paging_queue_t *q, uint16_t sfn) {
-    return q->buckets[sfn].count >= MAX_REQ_PER_SFN;
+    return q->buckets[sfn].count >= MAX_PAGING_RECORDS;
 }
 
 static bool bucket_contains_ue(const paging_bucket_t *bucket,uint32_t ue_id){

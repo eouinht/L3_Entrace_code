@@ -6,7 +6,7 @@
 #include <time.h>
 
 #define MAX_PAGING_QUEUE 8192
-#define MAX_REQ_PER_SFN 128
+#define MAX_PAGING_RECORDS 32
 #define SFN_MOD 1024
 
 typedef struct{
@@ -18,7 +18,7 @@ typedef struct{
 } __attribute__((packed)) paging_req_t;
 
 typedef struct {
-    paging_req_t items[MAX_REQ_PER_SFN];
+    paging_req_t items[MAX_PAGING_RECORDS];
     uint32_t count;
 } paging_bucket_t;
 

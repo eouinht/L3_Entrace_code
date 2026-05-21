@@ -1,2 +1,6 @@
 logs/
 *.logs
+amf
+gNodeB
+test
+ue

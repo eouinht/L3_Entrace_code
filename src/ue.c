@@ -10,23 +10,10 @@
 #include "timer.h"
 #include "ue.h"
 
-// #define SFN_MOD 1024u
-// #define DEFAULT_UE_PORT 5001u
-// #define DEFAULT_UE_ID 1001u
-
-
-// #define T 64u
-// #define N 1u
-// #define PF_OFFSET 0u
-// #define GNB_IP "127.0.0.1"
-// #define GNB_UDP_PORT 5000u
-
 static uint32_t ue_id = DEFAULT_UE_ID;
-
 static uint16_t ue_sfn = 0;
 static uint32_t tick_sync = 0;
 static int synced = 0;
-
 static uint64_t total_mib = 0;  
 static uint64_t total_rrc = 0;
 
@@ -62,8 +49,6 @@ static int sfn_delta(uint16_t a, uint16_t b) {
     } 
     return d;
 }
-
-
 
 /*
  * ============================================================
@@ -127,6 +112,7 @@ static int create_broadcast_rx_socket(uint16_t port)
 
     return skt;
 }
+
 static void handle_mib_message(const uint8_t *buf, ssize_t len)
 {
     if (len != (ssize_t)sizeof(MIB_msg)) {
@@ -187,22 +173,64 @@ static void handle_mib_message(const uint8_t *buf, ssize_t len)
 
 static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
 {
-    if (len != (ssize_t)sizeof(RRC_Paging_msg)) {
-        printf("[UE %u] Invalid RRC Paging size=%zd, expected=%zu\n",
-               ue_id,
-               len,
-               sizeof(RRC_Paging_msg));
+    if (len < (ssize_t)sizeof(uint32_t)){
+        printf("[UE %u] Invalid RRC Paging size=%zd\n", ue_id, len);
         fflush(stdout);
         return;
     }
 
-    RRC_Paging_msg rrc;
-    memcpy(&rrc, buf, sizeof(rrc));
+    uint32_t number_records_in;
+    memcpy(&number_records_in, buf, sizeof(number_records_in));
+    uint32_t number_records = ntohl(number_records_in);
 
-    uint32_t target_ue_id = ntohl(rrc.ue_id);
-    if (target_ue_id != ue_id) {
+    if (number_records == 0 || number_records > MAX_PAGING_RECORDS){
+        printf("[UE %u] Invalid number_records=%u\n",ue_id, number_records);
+        fflush(stdout);
         return;
     }
+
+    size_t msg_len = sizeof(uint32_t) + ((size_t)number_records *sizeof(PagingRecord));
+    if((size_t)len != msg_len){
+        printf("[UE %u] Invalid RRC Paging Batch size=%zd, expected=%zu, records=%u\n",
+               ue_id,
+               len,
+               msg_len,
+               number_records);
+        fflush(stdout);
+        return;
+    }
+    int found = 0;
+    uint32_t tac = 0;
+    uint32_t cn_domain = 0;
+    const uint8_t *record_base = buf + sizeof(uint32_t);
+
+    for (uint32_t i = 0; i < number_records; i++) {
+        PagingRecord record;
+        memcpy(
+            &record,
+            record_base + i * sizeof(PagingRecord),
+            sizeof(record)
+        );
+        uint32_t message_type = ntohl(record.message_type);
+        uint32_t target_ue_id = ntohl(record.ue_id);
+
+        if (message_type != MSG_TYPE_PAGING){
+            continue;
+        }
+        
+        if (target_ue_id == ue_id) {
+            found = 1;
+            tac = ntohl(record.tac);
+            cn_domain = ntohl(record.cn_domain);
+            break;
+        }
+        
+    }
+
+    if (!found) {
+        return;
+    }
+
     if (!synced) {
         printf("[UE %u] Ignore own RRC Paging because SFN is not synced yet\n",
                ue_id);
@@ -213,20 +241,22 @@ static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
     total_rrc++;
 
     int check_sfn = (ue_sfn + PF_OFFSET) % T;
-
-    if (check_sfn == 0) {
-        printf("[UE %u] RX RRC Paging | Target UE_ID=%u | UE_SFN=%u | total_rrc=%lu\n",
+    
+    if(check_sfn == 0) {
+        printf("[UE %u] RX RRC Paging Batch | UE_SFN=%u | records=%u | TAC=%u | CN_DOMAIN=%u | total_rrc=%lu\n",
                ue_id,
-               target_ue_id,
                ue_sfn,
+               number_records,
+               tac,
+               cn_domain,
                total_rrc);
         fflush(stdout);
-    } else {
-        printf("[UE %u] RX own RRC Paging but not paging frame | Target UE_ID=%u | UE_SFN=%u | check_sfn=%d\n",
+    }else{
+        printf("[UE %u] RX own RRC Paging Batch but not paging frame | UE_SFN=%u | check_sfn=%d | records=%u\n",
                ue_id,
-               target_ue_id,
                ue_sfn,
-               check_sfn);
+               check_sfn,
+               number_records);
         fflush(stdout);
     }
 }
@@ -245,22 +275,27 @@ static void handle_broadcast_message(const uint8_t *buf, ssize_t len)
     if (len <= 0) {
         return;
     }
+    // printf("[UE %u][DBG] RX UDP len=%zd | first_byte=0x%02x\n",
+    //        ue_id,
+    //        len,
+    //        buf[0]);
+    // fflush(stdout);
 
-    uint8_t msg_type = buf[0];
+    // uint8_t msg_type = buf[0];
 
-    if (msg_type == MIB_IE1) {
+    if (len == (ssize_t)sizeof(MIB_msg) && buf[0] == MIB_IE1) {
         handle_mib_message(buf, len);
         return;
     }
 
-    if (msg_type == MSG_TYPE_PAGING) {
+    if (len >= (ssize_t)(sizeof(uint32_t) + sizeof(PagingRecord))) {
+        
         handle_rrc_paging_message(buf, len);
         return;
     }
 
-    printf("[UE %u] Unknown broadcast message type=0x%02x | len=%zd\n",
+    printf("[UE %u] Unknown broadcast message | len=%zd\n",
            ue_id,
-           msg_type,
            len);
     fflush(stdout);
 }
@@ -316,7 +351,8 @@ int main(int argc, char **argv)
     fflush(stdout);
 
     while (1) {
-        uint8_t buf[128];
+
+        uint8_t buf[sizeof(RRC_PagingBatch_msg)];
 
         ssize_t len = recvfrom(
             udp_skt,
@@ -331,7 +367,7 @@ int main(int argc, char **argv)
             perror("[UE] recvfrom");
             continue;
         }
-
+        
         handle_broadcast_message(buf, len);
     }
 

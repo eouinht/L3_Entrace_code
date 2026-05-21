@@ -1,23 +1,31 @@
 [UE 1001] Listening broadcast UDP port 6000
 [UE 1001] Initial sync | UE_SFN=208 | gNB_SFN=208 | mib_total=1
-[UE 1001] RX RRC Paging | Target UE_ID=1001 | UE_SFN=256 | total_rrc=1
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=228 | check_sfn=36 | records=7
 [UE 1001] Re-sync | UE_SFN=288 | gNB_SFN=288 | delta_before=0 | mib_total=11
-[UE 1001] RX own RRC Paging but not paging frame | Target UE_ID=1001 | UE_SFN=321 | check_sfn=1
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=292 | check_sfn=36 | records=7
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=356 | check_sfn=36 | records=7
 [UE 1001] Re-sync | UE_SFN=368 | gNB_SFN=368 | delta_before=0 | mib_total=21
-[UE 1001] RX RRC Paging | Target UE_ID=1001 | UE_SFN=448 | total_rrc=3
-[UE 1001] Re-sync | UE_SFN=448 | gNB_SFN=448 | delta_before=1 | mib_total=31
-[UE 1001] RX RRC Paging | Target UE_ID=1001 | UE_SFN=512 | total_rrc=4
-[UE 1001] Re-sync | UE_SFN=536 | gNB_SFN=536 | delta_before=-1 | mib_total=42
-[UE 1001] Re-sync | UE_SFN=616 | gNB_SFN=616 | delta_before=0 | mib_total=52
-[UE 1001] RX own RRC Paging but not paging frame | Target UE_ID=1001 | UE_SFN=641 | check_sfn=1
-[UE 1001] Re-sync | UE_SFN=696 | gNB_SFN=696 | delta_before=0 | mib_total=62
-[UE 1001] RX RRC Paging | Target UE_ID=1001 | UE_SFN=768 | total_rrc=6
-[UE 1001] Re-sync | UE_SFN=776 | gNB_SFN=776 | delta_before=0 | mib_total=72
-[UE 1001] RX RRC Paging | Target UE_ID=1001 | UE_SFN=832 | total_rrc=7
-[UE 1001] Re-sync | UE_SFN=856 | gNB_SFN=856 | delta_before=0 | mib_total=82
-[UE 1001] Re-sync | UE_SFN=936 | gNB_SFN=936 | delta_before=0 | mib_total=92
-[UE 1001] RX RRC Paging | Target UE_ID=1001 | UE_SFN=960 | total_rrc=8
-[UE 1001] Re-sync | UE_SFN=1016 | gNB_SFN=1016 | delta_before=0 | mib_total=102
-[UE 1001] RX own RRC Paging but not paging frame | Target UE_ID=1001 | UE_SFN=1 | check_sfn=1
-[UE 1001] Re-sync | UE_SFN=72 | gNB_SFN=72 | delta_before=0 | mib_total=112
-[UE 1001] Re-sync | UE_SFN=152 | gNB_SFN=152 | delta_before=0 | mib_total=122
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=420 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=448 | gNB_SFN=448 | delta_before=0 | mib_total=31
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=484 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=528 | gNB_SFN=528 | delta_before=0 | mib_total=41
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=548 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=608 | gNB_SFN=608 | delta_before=0 | mib_total=51
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=612 | check_sfn=36 | records=7
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=676 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=688 | gNB_SFN=688 | delta_before=0 | mib_total=61
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=740 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=768 | gNB_SFN=768 | delta_before=0 | mib_total=71
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=804 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=848 | gNB_SFN=848 | delta_before=0 | mib_total=81
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=868 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=928 | gNB_SFN=928 | delta_before=0 | mib_total=91
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=932 | check_sfn=36 | records=7
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=996 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=1008 | gNB_SFN=1008 | delta_before=0 | mib_total=101
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=36 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=64 | gNB_SFN=64 | delta_before=0 | mib_total=111
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=100 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=144 | gNB_SFN=144 | delta_before=0 | mib_total=121
+[UE 1001] RX own RRC Paging Batch but not paging frame | UE_SFN=164 | check_sfn=36 | records=7
+[UE 1001] Re-sync | UE_SFN=224 | gNB_SFN=224 | delta_before=0 | mib_total=131
