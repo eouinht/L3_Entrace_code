@@ -14,7 +14,7 @@ gcc src/amf.c src/timer.c -o amf -Iinclude -lpthread
 stdbuf -o0 -e0 ./gNodeB > logs/gnb.log 2>&1 &
 sleep 1
 
-stdbuf -o0 -e0 ./amf 500 10 1001 100 > logs/amf.log 2>&1 &
+stdbuf -o0 -e0 ./amf 500 120 1001 500 > logs/amf.log 2>&1 &
 sleep 1
 stdbuf -o0 -e0 ./ue 1001 > logs/ue_1001.log 2>&1 &
 stdbuf -o0 -e0 ./ue 1002 > logs/ue_1002.log 2>&1 &

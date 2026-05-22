@@ -242,7 +242,7 @@ static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
 
     int check_sfn = (ue_sfn + PF_OFFSET) % T;
     
-    if(check_sfn == 0) {
+    if(check_sfn == (T / N)  * (ue_id % N)) {
         printf("[UE %u] RX RRC Paging Batch | UE_SFN=%u | records=%u | TAC=%u | CN_DOMAIN=%u | total_rrc=%lu\n",
                ue_id,
                ue_sfn,
