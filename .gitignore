@@ -1,5 +1,9 @@
+# Logs
 logs/
+*.log
 *.logs
+
+# Build outputs / executables
 amf
 gNodeB
 test
