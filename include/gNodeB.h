@@ -7,21 +7,19 @@
 #define SFN_MOD 1024
 
 #define GNB_TCP_PORT 6000
-#define GNB_UDP_PORT 5000 // gNB nghe UE 
+#define GNB_UDP_PORT 5000 // nghe UE gNB 
 #define LOCAL_IP "127.0.0.1"
 
 #define T 64
 #define N 16
 #define PF_OFFSET 0
 
-#define UE_ID_BASE 1000
-#define UE_PORT_BASE 5000
 
 #define MIB_BROADCAST_IP "255.255.255.255"
-#define MIB_BROADCAST_PORT 6000 // UE nghe gNB
+#define MIB_BROADCAST_PORT GNB_UDP_PORT // UE nghe gNB
 
 #define RRC_BROADCAST_IP "255.255.255.255"
-#define RRC_BROADCAST_PORT 6000
+#define RRC_BROADCAST_PORT GNB_UDP_PORT
 
 extern volatile uint16_t g_sfn;
 

@@ -5,8 +5,8 @@
 #include <stdint.h>
 #include <time.h>
 
-#define MAX_PAGING_QUEUE 8192
-#define MAX_PAGING_RECORDS 32
+#define MAX_PAGING_QUEUE 8192 // Chọn ngẫu nhiên
+#define MAX_PAGING_RECORDS 32 // Theo chuẩn
 #define SFN_MOD 1024
 
 typedef struct{

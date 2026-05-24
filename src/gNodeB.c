@@ -114,6 +114,7 @@ static void send_rrc_paging(const paging_req_t *req){
 }
 
 static void send_rrc_paging_batch(const paging_req_t *batch, int n){
+
     if(batch==NULL || n <= 0){
         return;
     }
@@ -131,13 +132,24 @@ static void send_rrc_paging_batch(const paging_req_t *batch, int n){
     }
 
     size_t msg_len = sizeof(rrc_batch.number_records) + ((size_t)n * sizeof(PagingRecord));
+    
     if(send_udp_broadcast(RRC_BROADCAST_IP,RRC_BROADCAST_PORT,&rrc_batch, msg_len) <0){
         printf("[gNB][Send][RRC_BATCH] Failed | SFN=%u | records=%d\n",
                gnb_sfn,
                n);
         fflush(stdout);
+
         return;
     }
+
+    printf("[gNB] Broadcast MSG | SFN=%u | bytes=%zu | sent=%d | dst=%s:%u\n",
+       gnb_sfn,
+       msg_len,
+       1,
+       RRC_BROADCAST_IP,
+       RRC_BROADCAST_PORT);
+    fflush(stdout);
+        
     printf("[gNB][Send][RRC_BATCH] Broadcast RCC Paging Batch | SFN=%u | records=%d\n", gnb_sfn, n);
     
     printf("UE Paging list: ");
@@ -156,7 +168,9 @@ static void broadcast_rrc(uint16_t current_sfn){
     // for (int i = 0; i < n; i++){
     //     send_rrc_paging(&batch[i]);
     // }
-    if(n < 0) return;
+    if(n < 0){
+        return;
+    }
     send_rrc_paging_batch(batch, n);
 }
 
@@ -166,18 +180,26 @@ static uint16_t calc_paging_sfn(uint16_t current_sfn, uint32_t ue_id){
     while(((sfn + PF_OFFSET) % T) != target_offset){
         sfn = (sfn + 1) % SFN_MOD;
     }
+    if (sfn == current_sfn) {
+        sfn = (sfn + T) % SFN_MOD;
+    }
     return sfn;
 }
 
 // Nhận NGAP 
 static int parse_ngap_paging(const NGAP_Paging_msg *ngap, paging_req_t *req){
-    if(ngap->message_type != MSG_TYPE_PAGING){
+    if (ngap == NULL || req == NULL) {
+        return -1;
+    }
+
+    uint32_t message_type = ntohl(ngap->message_type);
+    if(message_type != MSG_TYPE_PAGING){
         printf("[gNB][Rec] Invalid NGAP type=0x%02x\n",
                ngap->message_type);
         return -1;
     }
     memset(req, 0, sizeof(*req));
-    req->message_type = ngap->message_type;
+    req->message_type = message_type;
     req->ue_id = ntohl(ngap->ue_id);
     req->tac = ntohl(ngap->tac);
     req->cn_domain = ntohl(ngap->cn_domain);
@@ -242,7 +264,7 @@ static void *ngap_receiver_thread(void *arg)
 
         fflush(stdout);
     }
-    running = 0;
+    // running = 0;
     return NULL;
 }
 
@@ -253,7 +275,9 @@ static void gnb_tick(void *arg)
 
     gnb_sfn = (gnb_sfn + 1) % SFN_MOD;
     tick_count++;
+
     broadcast_rrc(gnb_sfn);
+
     if (tick_count % 8 == 0){
         broadcast_mib();
     }
@@ -281,17 +305,17 @@ static int init_udp_socket(void){
         close_fd_if_open(&udp_skt);
         return -1;
     }
-    struct sockaddr_in udp_addr;
-    memset(&udp_addr, 0, sizeof(udp_addr));
+    // struct sockaddr_in udp_addr;
+    // memset(&udp_addr, 0, sizeof(udp_addr));
 
-    udp_addr.sin_family = AF_INET;
-    udp_addr.sin_port = htons(GNB_UDP_PORT);
-    udp_addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(udp_skt, (struct sockaddr *)&udp_addr, sizeof(udp_addr)) < 0) {
-        perror("[gNB] UDP bind");
-        close_fd_if_open(&udp_skt);
-        return 1;
-    }
+    // udp_addr.sin_family = AF_INET;
+    // udp_addr.sin_port = htons(GNB_UDP_PORT);
+    // udp_addr.sin_addr.s_addr = INADDR_ANY;
+    // if (bind(udp_skt, (struct sockaddr *)&udp_addr, sizeof(udp_addr)) < 0) {
+    //     perror("[gNB] UDP bind");
+    //     close_fd_if_open(&udp_skt);
+    //     return 1;
+    // }
     printf("[gNB] UDP server listening on port %u for UE\n", GNB_UDP_PORT);
 
     return 0;

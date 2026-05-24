@@ -45,7 +45,7 @@ static int send_ngap_paging(int tcp_skt, uint32_t ue_id)
 
     memset(&msg, 0, sizeof(msg));
 
-    msg.message_type = MSG_TYPE_PAGING;
+    msg.message_type = htonl(MSG_TYPE_PAGING);
     msg.ue_id = htonl(ue_id);
     msg.tac = htonl(TAC_DEFAULT);
     msg.cn_domain =htonl(CN_DOMAIN_DATA);
@@ -140,24 +140,6 @@ static void run_load_mode(
         printf("[AMF] Send NGAP Paging | UE_ID=%u\n", ue_id);
         sleep_ns(interval_ns);
     }
-}
-
-static void print_usage(const char *prog)
-{
-    printf("Usage:\n");
-    printf("  %s\n", prog);
-    printf("      Send one NGAP Paging to default UE_ID=%u\n",
-           DEFAULT_UE_ID);
-
-    printf("  %s <ue_id>\n", prog);
-    printf("      Send one NGAP Paging to given UE_ID\n");
-
-    printf("  %s <rate> <duration_sec> [start_ue_id] [num_ue]\n", prog);
-    printf("      Run load mode\n");
-
-    printf("\nExamples:\n");
-    printf("  %s 1005\n", prog);
-    printf("  %s 10 60 1001 10\n", prog);
 }
 
 int main(int argc, char **argv)

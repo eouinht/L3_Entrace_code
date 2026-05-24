@@ -55,7 +55,7 @@ static int sfn_delta(uint16_t a, uint16_t b) {
  * UDP broadcast socket
  * ============================================================
  *
- * Nhiều UE process cùng bind vào port 6000.
+ * Nhiều UE process cùng bind vào port 5000.
  * Vì vậy cần SO_REUSEADDR.
  *
  * Trên Linux, nên bật thêm SO_REUSEPORT nếu có.
@@ -83,19 +83,19 @@ static int create_broadcast_rx_socket(uint16_t port)
         return -1;
     }
 
-#ifdef SO_REUSEPORT
-    if (setsockopt(
-            skt,
-            SOL_SOCKET,
-            SO_REUSEPORT,
-            &opt,
-            sizeof(opt)
-        ) < 0) {
-        perror("[UE] setsockopt SO_REUSEPORT");
-        close(skt);
-        return -1;
-    }
-#endif
+// #ifdef SO_REUSEPORT
+//     if (setsockopt(
+//             skt,
+//             SOL_SOCKET,
+//             SO_REUSEPORT,
+//             &opt,
+//             sizeof(opt)
+//         ) < 0) {
+//         perror("[UE] setsockopt SO_REUSEPORT");
+//         close(skt);
+//         return -1;
+//     }
+// #endif
 
     struct sockaddr_in ue_addr;
     memset(&ue_addr, 0, sizeof(ue_addr));
@@ -165,10 +165,10 @@ static void handle_mib_message(const uint8_t *buf, ssize_t len)
  * RRC Paging handler
  * ============================================================
  *
- * RRC Paging bây giờ được gNB broadcast.
+ * RRC Paging được gNB broadcast.
  *
  * Tất cả UE nghe được gói này.
- * Nhưng chỉ UE có ue_id trùng target_ue_id mới xử lý.
+ * Nếu UE có ue_id trùng target_ue_i sẽ in log là UE đã nhận được RRC.
  */
 
 static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
@@ -216,6 +216,7 @@ static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
 
         if (message_type != MSG_TYPE_PAGING){
             continue;
+            
         }
         
         if (target_ue_id == ue_id) {
@@ -266,7 +267,7 @@ static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
  * Broadcast message dispatcher
  * ============================================================
  *
- * MIB và RRC Paging cùng đi qua port 6000.
+ * MIB và RRC Paging cùng đi qua port 5000.
  * Vì vậy UE phải đọc byte đầu để biết message type.
  */
 
@@ -275,13 +276,6 @@ static void handle_broadcast_message(const uint8_t *buf, ssize_t len)
     if (len <= 0) {
         return;
     }
-    // printf("[UE %u][DBG] RX UDP len=%zd | first_byte=0x%02x\n",
-    //        ue_id,
-    //        len,
-    //        buf[0]);
-    // fflush(stdout);
-
-    // uint8_t msg_type = buf[0];
 
     if (len == (ssize_t)sizeof(MIB_msg) && buf[0] == MIB_IE1) {
         handle_mib_message(buf, len);
@@ -289,8 +283,9 @@ static void handle_broadcast_message(const uint8_t *buf, ssize_t len)
     }
 
     if (len >= (ssize_t)(sizeof(uint32_t) + sizeof(PagingRecord))) {
-        
+
         handle_rrc_paging_message(buf, len);
+        
         return;
     }
 
@@ -304,30 +299,17 @@ static void handle_broadcast_message(const uint8_t *buf, ssize_t len)
  * ============================================================
  * main
  * ============================================================
- *
- * Cách chạy mới:
+ * Cách chạy N Ue ứng với UE_ID (1000 + N), UE_ID này tự đặt, không theo chuẩn:
  *
  *      ./ue 1001
  *      ./ue 1002
  *      ./ue 1003
  *
- * hoặc nếu muốn truyền port:
- *
- *      ./ue 1001 6000
- *      ./ue 1002 6000
- *      ./ue 1003 6000
- *
- * Không dùng:
- *
- *      ./ue 1001 5001
- *      ./ue 1002 5002
- *
- * nữa, vì gNB không broadcast xuống 5001/5002.
  */
 
 int main(int argc, char **argv)
 {
-    uint16_t udp_port = UE_BROADCAST_PORT;
+    uint16_t udp_port = GNB_UDP_PORT;
 
     if (argc >= 2) {
         ue_id = (uint32_t)strtoul(argv[1], NULL, 10);
@@ -353,7 +335,6 @@ int main(int argc, char **argv)
     while (1) {
 
         uint8_t buf[sizeof(RRC_PagingBatch_msg)];
-
         ssize_t len = recvfrom(
             udp_skt,
             buf,
@@ -362,6 +343,12 @@ int main(int argc, char **argv)
             NULL,
             NULL
         );
+
+        // printf("[UE %u][RAW] RX UDP len=%zd | first_byte=0x%02x\n",
+        //     ue_id,
+        //     len,
+        //     buf[0]);
+        // fflush(stdout);
 
         if (len < 0) {
             perror("[UE] recvfrom");
