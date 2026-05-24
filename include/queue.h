@@ -9,6 +9,11 @@
 #define MAX_PAGING_RECORDS 32 // Theo chuẩn
 #define SFN_MOD 1024
 
+#define ENQUEUE_OK 0
+#define ENQUEUE_ERR_FULL -1
+#define ENQUEUE_ERR_DUPLICATE -2
+#define ENQUEUE_ERR_INVALID -3
+
 typedef struct{
     uint32_t message_type;
     uint32_t ue_id;

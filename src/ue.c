@@ -17,6 +17,31 @@ static int synced = 0;
 static uint64_t total_mib = 0;  
 static uint64_t total_rrc = 0;
 
+static uint64_t total_rrc_batch = 0;
+static uint64_t total_rrc_not_for_ue = 0;
+static uint64_t total_rrc_invalid = 0;
+static uint64_t total_rrc_not_synced = 0;
+static uint64_t total_rrc_wrong_pf = 0;
+static uint64_t ue_tick_count = 0;
+
+static void print_ue_stats(void)
+{
+    uint32_t expected_offset = (T / N) * (ue_id % N);
+
+    printf("[UE %u][STAT] MIB_RX=%lu | RRC_BATCH_RX=%lu | OWN_RRC_RX=%lu | NOT_FOR_UE=%lu | INVALID_RRC=%lu | NOT_SYNCED=%lu | WRONG_PF=%lu | UE_SFN=%u | expected_offset: SFNmod64=%u\n",
+           ue_id,
+           total_mib,
+           total_rrc_batch,
+           total_rrc,
+           total_rrc_not_for_ue,
+           total_rrc_invalid,
+           total_rrc_not_synced,
+           total_rrc_wrong_pf,
+           ue_sfn,
+           expected_offset);
+    fflush(stdout);
+}
+
 /*
  * ============================================================
  * Timer tick
@@ -29,6 +54,15 @@ static void ue_tick(void *arg){
     (void)arg; 
     ue_sfn = (ue_sfn + 1) % SFN_MOD;
     tick_sync++;
+    ue_tick_count++;
+    /*
+     * 1 tick = 10ms
+     * 6000 ticks = 60s
+     */
+    if (ue_tick_count % 6000 == 0) {
+        print_ue_stats();
+    }
+
 }
 
 /*
@@ -48,6 +82,18 @@ static int sfn_delta(uint16_t a, uint16_t b) {
         d += 1024;
     } 
     return d;
+}
+
+static uint16_t calc_expected_paging_sfn(uint16_t current_sfn, uint32_t ue_id)
+{
+    uint32_t target_offset = (T / N) * (ue_id % N);
+    uint16_t sfn = current_sfn;
+
+    while (((sfn + PF_OFFSET) % T) != target_offset) {
+        sfn = (sfn + 1) % SFN_MOD;
+    }
+
+    return sfn;
 }
 
 /*
@@ -228,35 +274,42 @@ static void handle_rrc_paging_message(const uint8_t *buf, ssize_t len)
         
     }
 
-    if (!found) {
+    if (!found){
+        total_rrc_not_for_ue++;
         return;
     }
 
-    if (!synced) {
+    if (!synced){
+        total_rrc_not_synced++;
         printf("[UE %u] Ignore own RRC Paging because SFN is not synced yet\n",
                ue_id);
         fflush(stdout);
         return;
     }
-
-    total_rrc++;
+    total_rrc_batch++;
+    
 
     int check_sfn = (ue_sfn + PF_OFFSET) % T;
-    
-    if(check_sfn == (T / N)  * (ue_id % N)) {
-        printf("[UE %u] RX RRC Paging Batch | UE_SFN=%u | records=%u | TAC=%u | CN_DOMAIN=%u | total_rrc=%lu\n",
+    uint16_t actual_sfn = ue_sfn;
+    uint16_t expected_sfn = calc_expected_paging_sfn(ue_sfn, ue_id);
+
+    if(actual_sfn == expected_sfn) {
+        total_rrc++;
+        printf("[UE %u] RX RRC Paging Batch | UE_SFN=%u | Expected_SFN=%u | records=%u | TAC=%u | CN_DOMAIN=%u | total_rrc=%lu\n",
                ue_id,
                ue_sfn,
+               expected_sfn,
                number_records,
                tac,
                cn_domain,
                total_rrc);
         fflush(stdout);
     }else{
-        printf("[UE %u] RX own RRC Paging Batch but not paging frame | UE_SFN=%u | check_sfn=%d | records=%u\n",
+        total_rrc_wrong_pf++;
+        printf("[UE %u] RX own RRC Paging Batch but not paging frame | UE_SFN=%u | Expected_SFN=%u | records=%u\n",
                ue_id,
                ue_sfn,
-               check_sfn,
+               expected_sfn,
                number_records);
         fflush(stdout);
     }
@@ -306,6 +359,7 @@ static void handle_broadcast_message(const uint8_t *buf, ssize_t len)
  *      ./ue 1003
  *
  */
+
 
 int main(int argc, char **argv)
 {

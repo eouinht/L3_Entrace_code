@@ -11,7 +11,7 @@
 #define LOCAL_IP "127.0.0.1"
 
 #define T 64
-#define N 16
+#define N 64
 #define PF_OFFSET 0
 
 

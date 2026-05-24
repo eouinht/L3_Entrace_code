@@ -23,6 +23,16 @@ static volatile sig_atomic_t running = 1;
 static pthread_mutex_t paging_mutex = PTHREAD_MUTEX_INITIALIZER;
 static paging_queue_t paging_q;
 
+static uint64_t stat_ngap_rx = 0;
+static uint64_t stat_enqueue_ok = 0;
+static uint64_t stat_enqueue_drop = 0;
+static uint64_t stat_rrc_send_fail = 0;
+static uint64_t stat_rrc_batch_sent = 0;
+static uint64_t stat_rrc_records_sent = 0;
+
+static uint64_t stat_duplicate_ignored = 0;
+static uint64_t stat_queue_full_drop = 0;
+
 static void send_rrc_paging(const paging_req_t *req);
 
 static void close_fd_if_open(int *fd)
@@ -75,11 +85,12 @@ static int send_udp_broadcast(
         printf("[gNB] Warning: sent %zd/%zu bytes \n", sent, len);
         return -1;
     }
-    printf("[gNB] Broadcast MSG | SFN=%u | Broadcast=%d:%s\n",
-           gnb_sfn,
-           broadcast_port,
-           broadcast_ip);
-
+    // printf("[gNB] Broadcast MSG | SFN=%u | Broadcast=%d:%s\n",
+    //        gnb_sfn,
+    //        broadcast_port,
+    //        broadcast_ip);
+    fflush(stdout);
+    return 0;
 }
 
 static void broadcast_mib(void)
@@ -89,12 +100,16 @@ static void broadcast_mib(void)
     mib.message_id = MIB_IE1;
     mib.sfn_value = htons(gnb_sfn);
     if(send_udp_broadcast(MIB_BROADCAST_IP, MIB_BROADCAST_PORT, &mib,sizeof(mib)) < 0){
+        stat_rrc_send_fail++;
         printf("[gNB][MIB] Failed to broadcast MIB | SFN=%u\n", gnb_sfn);
+        fflush(stdout);
+        return;
     }
     printf("[gNB][Send][MIB] Broadcast MIB | SFN=%u | Broadcast=%s:%d\n",
            gnb_sfn,
            MIB_BROADCAST_IP,
            MIB_BROADCAST_PORT);
+    
     
 }
 
@@ -141,20 +156,21 @@ static void send_rrc_paging_batch(const paging_req_t *batch, int n){
 
         return;
     }
+    stat_rrc_batch_sent++;
+    stat_rrc_records_sent += (uint64_t)n;
 
-    printf("[gNB] Broadcast MSG | SFN=%u | bytes=%zu | sent=%d | dst=%s:%u\n",
+    printf("[gNB][Send][RRC_BATCH] SFN=%u | records=%d | batch_sent=%lu | records_sent=%lu | NGAP_RX=%lu | ENQ_OK=%lu | ENQ_DROP=%lu\n",
        gnb_sfn,
-       msg_len,
-       1,
-       RRC_BROADCAST_IP,
-       RRC_BROADCAST_PORT);
-    fflush(stdout);
-        
-    printf("[gNB][Send][RRC_BATCH] Broadcast RCC Paging Batch | SFN=%u | records=%d\n", gnb_sfn, n);
-    
+       n,
+       stat_rrc_batch_sent,
+       stat_rrc_records_sent,
+       stat_ngap_rx,
+       stat_enqueue_ok,
+       stat_enqueue_drop);
+
     printf("UE Paging list: ");
     for(int i =0; i<n; i++){
-        printf("| %d | ",batch[i].ue_id);
+        printf("| %u | ",batch[i].ue_id);
     }
     printf("\n");
     fflush(stdout);
@@ -174,7 +190,8 @@ static void broadcast_rrc(uint16_t current_sfn){
     send_rrc_paging_batch(batch, n);
 }
 
-static uint16_t calc_paging_sfn(uint16_t current_sfn, uint32_t ue_id){
+static uint16_t calc_paging_sfn(uint16_t current_sfn, uint32_t UE_ID){
+    uint32_t ue_id = (UE_ID % 1024);
     uint32_t target_offset = (T / N)  * (ue_id % N);
     uint16_t sfn = current_sfn;
     while(((sfn + PF_OFFSET) % T) != target_offset){
@@ -208,11 +225,15 @@ static int parse_ngap_paging(const NGAP_Paging_msg *ngap, paging_req_t *req){
         
 }
 
-static void enqueue_ngap_paging(const paging_req_t *req){
+static int enqueue_ngap_paging(const paging_req_t *req){
+    if (req == NULL) {
+        return -1;
+    }
     pthread_mutex_lock(&paging_mutex);
-    enqueue_paging(&paging_q, req);
+    int req_ret = enqueue_paging(&paging_q, req);
     // queue_dump(&paging_q);
     pthread_mutex_unlock(&paging_mutex);
+    return req_ret;
 }
 
 static void *ngap_receiver_thread(void *arg)
@@ -255,17 +276,63 @@ static void *ngap_receiver_thread(void *arg)
         if (parse_ngap_paging(&ngap, &req) < 0){
             continue;
         }
-        enqueue_ngap_paging(&req);
+        stat_ngap_rx++;
+        int enq_ret = enqueue_ngap_paging(&req);
+        pthread_mutex_lock(&paging_mutex);
+        uint32_t bucket_size = queue_size_at_sfn(&paging_q, req.sfn_to_send);
+        uint32_t total_queue_size = queue_total_size(&paging_q);
+        pthread_mutex_unlock(&paging_mutex);
 
-        printf("[gNB][Rec] RX NGAP Paging | UE_ID=%u | current_sfn=%u | target_sfn=%u\n",
-               req.ue_id,
-               gnb_sfn,
-               req.sfn_to_send);
+        if (enq_ret == ENQUEUE_OK) {
+            stat_enqueue_ok++;
+        } else if (enq_ret == ENQUEUE_ERR_DUPLICATE) {
+            stat_duplicate_ignored++;
+            printf("[gNB][DUP] Duplicate paging ignored | UE_ID=%u | target_sfn=%u | DUP=%lu\n",
+                req.ue_id,
+                req.sfn_to_send,
+                stat_duplicate_ignored);
+            fflush(stdout);
+        } else if (enq_ret == ENQUEUE_ERR_FULL) {
+            stat_queue_full_drop++;
+            printf("[gNB][DROP] Queue bucket full | UE_ID=%u | target_sfn=%u | bucket_size=%u | queue_total=%u | QUEUE_FULL_DROP=%lu\n",
+                req.ue_id,
+                req.sfn_to_send,
+                bucket_size,
+                total_queue_size,
+                stat_queue_full_drop);
+            fflush(stdout);
+        }
+
+
+        // printf("[gNB][Rec] RX NGAP Paging | UE_ID=%u | current_sfn=%u | target_sfn=%u\n",
+        //        req.ue_id,
+        //        gnb_sfn,
+        //        req.sfn_to_send);
 
         fflush(stdout);
     }
     // running = 0;
     return NULL;
+}
+
+static void print_gnb_stats(void)
+{
+    pthread_mutex_lock(&paging_mutex);
+
+    uint32_t queue_size = queue_total_size(&paging_q);
+
+    printf("[gNB][STAT] NGAP_RX=%lu | ENQ_OK=%lu | ENQ_DROP=%lu | RRC_BATCH_SENT=%lu | RRC_RECORDS_SENT=%lu | RRC_SEND_FAIL=%lu | QUEUE_SIZE=%u\n",
+       stat_ngap_rx,
+       stat_enqueue_ok,
+       stat_enqueue_drop,
+       stat_rrc_batch_sent,
+       stat_rrc_records_sent,
+       stat_rrc_send_fail,
+       queue_size);
+
+    fflush(stdout);
+
+    pthread_mutex_unlock(&paging_mutex);
 }
 
 // Tăng time mỗi 10ms, gửi MIB(nếu đúng time), gửi RRC(nếu đúng time)
@@ -280,6 +347,13 @@ static void gnb_tick(void *arg)
 
     if (tick_count % 8 == 0){
         broadcast_mib();
+    }
+
+    /*f
+     * In thống kê mỗi 100*60 tick = 1*60 giây.
+     */
+    if (tick_count % 6000 == 0) {
+        print_gnb_stats();
     }
 
 }
@@ -316,8 +390,10 @@ static int init_udp_socket(void){
     //     close_fd_if_open(&udp_skt);
     //     return 1;
     // }
-    printf("[gNB] UDP server listening on port %u for UE\n", GNB_UDP_PORT);
-
+    printf("[gNB] UDP broadcast socket ready | dst=%s:%u\n",
+       RRC_BROADCAST_IP,
+       RRC_BROADCAST_PORT);
+    fflush(stdout);
     return 0;
 }
 

@@ -26,14 +26,15 @@ static bool bucket_contains_ue(const paging_bucket_t *bucket,uint32_t ue_id){
     return false;
 }
 int enqueue_paging(paging_queue_t *q, const paging_req_t *req) {
+    
     uint16_t sfn = req->sfn_to_send;
     if(queue_is_full_at_sfn(q, sfn)){
-        return -1;
+        return ENQUEUE_ERR_FULL;
     }
     paging_bucket_t *bucket = &q->buckets[sfn];
     if(bucket_contains_ue(bucket, req->ue_id)){
         printf("[QUEUE] Duplicate paging ignored | UE_ID=%u | SFN=%u\n", req->ue_id, sfn);
-        return -1;
+        return ENQUEUE_ERR_DUPLICATE;
     }
     bucket->items[bucket->count] = *req;
     bucket->count++; 
