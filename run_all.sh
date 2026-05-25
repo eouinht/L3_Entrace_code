@@ -33,7 +33,7 @@ sleep 1
 # 3. Start UE processes from generated UE ID file
 idx=0
 while read -r UE_ID; do
-    stdbuf -o0 -e0 ./ue "$UE_ID" > "logs/ue_${idx}_${UE_ID}.log" 2>&1 &
+    stdbuf -o0 -e0 ./ue "$UE_ID" > "logs/ue_${UE_ID}.log" 2>&1 &
     idx=$((idx + 1))
 done < "$UE_ID_FILE"
 

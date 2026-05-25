@@ -67,3 +67,40 @@ Có thể thay đổi input cho amf thì cần sửa trong file
 5. Test
 hiện chỉ có thể thay đổi ./run_all.sh
 và check kết quả bằng các file log in ra
+
+6. Đánh giá
+
+Thời gian chạy 60p
+UE ID list: logs/ue_ids.txt
+logs cá file amf/gnb/ue_{id} nằm trong logs/
+AMF: 
+    Gửi bản tin với tốc độ 500 NGAP/s , đã gửi 1800000 bản tin khớp với 
+        [AMF][SUMMARY] TOTAL_SENT=1800000 | EXPECTED_TOTAL=1800000
+    Số bản tin NGAP đã gửi ứng với mỗi UE_ID = 3600
+        [AMF][SUMMARY] NGAP Paging count per UE
+        [AMF][SUMMARY] --------------------------------
+        [AMF][SUMMARY] UE_ID=3404133186 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=330512652 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=3089956509 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=648133980 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=1562050784 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=3740369746 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=4231655040 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=245149400 | NGAP_PAGING_SENT=3600
+        [AMF][SUMMARY] UE_ID=2208438934 | NGAP_PAGING_SENT=3600
+        ...
+    Thời gian mỗi bản tin NGAP được gửi ứng với 1 UE_ID
+        [AMF][Send] Seq=1799970 | UE_ID=3791377994 | delta_since_last=1120 ms | expected_period=1000.0000000 ms
+        [AMF][Send] Seq=1799971 | UE_ID=2100206090 | delta_since_last=1119 ms | expected_period=1000.0000000 ms
+        [AMF][Send] Seq=1799972 | UE_ID=3076273512 | delta_since_last=1120 ms | expected_period=1000.0000000 ms
+        ...
+        => Kì vọng là 1000ms / 1 bản tin tuy nhiên thực tế dao động từ 1100ms -> 1164ms (Có thể do đặt quá nhiều lệnh in tại mỗi bản tin)        
+
+GNB: 
+    [gNB][STAT] NGAP_RX=1800000 | ENQ_OK=1799999 | ENQ_DROP=0 | RRC_BATCH_SENT=402003 | RRC_RECORDS_SENT=1799999 | RRC_SEND_FAIL=0 | QUEUE_SIZE=0
+
+UE:
+    [UE 173671027][STAT] MIB_RX=58884 | RRC_BATCH_RX=3600 | OWN_RRC_RX=3508 | NOT_FOR_UE=398403 | INVALID_RRC=0 | NOT_SYNCED=0 | WRONG_PF=92 | UE_SFN=1013 
+    [UE 179860193][STAT] MIB_RX=58882 | RRC_BATCH_RX=3600 | OWN_RRC_RX=3413 | NOT_FOR_UE=398403 | INVALID_RRC=0 | NOT_SYNCED=0 | WRONG_PF=187 | UE_SFN=3 
+    [UE 11740235][STAT] MIB_RX=58883 | RRC_BATCH_RX=3600 | OWN_RRC_RX=3484 | NOT_FOR_UE=398403 | INVALID_RRC=0 | NOT_SYNCED=0 | WRONG_PF=116 | UE_SFN=1016 
+    ...

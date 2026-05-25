@@ -147,12 +147,11 @@ static void run_load_mode(
     uint64_t *paging_count_per_ue = calloc(num_ue, sizeof(uint64_t));
     uint64_t *last_send_ms = calloc(num_ue, sizeof(uint64_t));
 
-    if (paging_count_per_ue == NULL || last_send_ms == NULL || ue_id_list == NULL) 
+    if (paging_count_per_ue == NULL || last_send_ms == NULL ) 
     {
         perror("[AMF] calloc");
         free(paging_count_per_ue);
         free(last_send_ms);
-        free(ue_id_list);
         return;
     }
 
