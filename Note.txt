@@ -68,7 +68,22 @@ Có thể thay đổi input cho amf thì cần sửa trong file
 hiện chỉ có thể thay đổi ./run_all.sh
 và check kết quả bằng các file log in ra
 
-6. Đánh giá
+6. Đánh giá mức tính năng /logs
+AMF gửi 1 bản tin NGAP cho UE_ID: UE_ID=0x11111040 = 286330944
+    [AMF] Single mode | UE_ID=0x11111040 | expected_sfn=64
+
+    [AMF] Single NGAP Paging mode
+    [AMF] Send NGAP Paging | UE_ID=286330944
+GNB 
+    [gNB][Rec] AMF connected
+    [gNB][Rec] RX NGAP Paging | UE_ID=286330944 | current_sfn=300 | target_sfn=320
+    [gNB][Rec] AMF disconnected
+    [gNB][Send][MIB] Broadcast MIB | SFN=304 | Broadcast=255.255.255.255:5000
+    [gNB][Send][MIB] Broadcast MIB | SFN=312 | Broadcast=255.255.255.255:5000
+    [gNB][Send][RRC_BATCH] SFN=320 | records=1 | batch_sent=1 | records_sent=1 | NGAP_RX=1 | ENQ_OK=1 | ENQ_DROP=0
+    UE Paging list: | 286330944 | 
+
+7. Đánh giá mức hiệu năng
 
 Thời gian chạy 60p
 UE ID list: logs/ue_ids.txt

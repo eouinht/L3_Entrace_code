@@ -25,13 +25,19 @@ static paging_queue_t paging_q;
 
 static uint64_t stat_ngap_rx = 0;
 static uint64_t stat_enqueue_ok = 0;
-static uint64_t stat_enqueue_drop = 0;
-static uint64_t stat_rrc_send_fail = 0;
+static uint64_t stat_enqueue_invalid = 0;
+static uint64_t stat_enqueue_other = 0;
+
+
 static uint64_t stat_rrc_batch_sent = 0;
 static uint64_t stat_rrc_records_sent = 0;
 
+static uint64_t stat_enqueue_drop = 0;
 static uint64_t stat_duplicate_ignored = 0;
 static uint64_t stat_queue_full_drop = 0;
+
+static uint64_t stat_mib_send_fail = 0;
+static uint64_t stat_rrc_send_fail = 0;
 
 static void send_rrc_paging(const paging_req_t *req);
 
@@ -100,7 +106,7 @@ static void broadcast_mib(void)
     mib.message_id = MIB_IE1;
     mib.sfn_value = htons(gnb_sfn);
     if(send_udp_broadcast(MIB_BROADCAST_IP, MIB_BROADCAST_PORT, &mib,sizeof(mib)) < 0){
-        stat_rrc_send_fail++;
+        stat_mib_send_fail++;
         printf("[gNB][MIB] Failed to broadcast MIB | SFN=%u\n", gnb_sfn);
         fflush(stdout);
         return;
@@ -149,6 +155,7 @@ static void send_rrc_paging_batch(const paging_req_t *batch, int n){
     size_t msg_len = sizeof(rrc_batch.number_records) + ((size_t)n * sizeof(PagingRecord));
     
     if(send_udp_broadcast(RRC_BROADCAST_IP,RRC_BROADCAST_PORT,&rrc_batch, msg_len) <0){
+        stat_rrc_send_fail++;
         printf("[gNB][Send][RRC_BATCH] Failed | SFN=%u | records=%d\n",
                gnb_sfn,
                n);
@@ -156,21 +163,24 @@ static void send_rrc_paging_batch(const paging_req_t *batch, int n){
 
         return;
     }
+    
     stat_rrc_batch_sent++;
     stat_rrc_records_sent += (uint64_t)n;
 
-    printf("[gNB][Send][RRC_BATCH] SFN=%u | records=%d | batch_sent=%lu | records_sent=%lu | NGAP_RX=%lu | ENQ_OK=%lu | ENQ_DROP=%lu\n",
+    printf("[gNB][Send][RRC_BATCH] SFN=%u | records=%d | batch_sent=%lu | records_sent=%lu | NGAP_RX=%lu | ENQ_OK=%lu | ENQ_DUP=%lu | ENQ_FULL_DROP=%lu | RRC_SEND_FAIL=%lu\n",
        gnb_sfn,
        n,
        stat_rrc_batch_sent,
        stat_rrc_records_sent,
        stat_ngap_rx,
        stat_enqueue_ok,
-       stat_enqueue_drop);
+       stat_duplicate_ignored,
+       stat_queue_full_drop,
+       stat_rrc_send_fail);
 
     printf("UE Paging list: ");
-    for(int i =0; i<n; i++){
-        printf("| %u | ",batch[i].ue_id);
+    for (int i = 0; i < n; i++) {
+        printf("| 0x%08X | ", batch[i].ue_id);
     }
     printf("\n");
     fflush(stdout);
@@ -256,7 +266,7 @@ static void *ngap_receiver_thread(void *arg)
     while (running){
         NGAP_Paging_msg ngap;
         paging_req_t req;
-        ssize_t len = recv(amf_conn, &ngap, sizeof(ngap), 0);
+        ssize_t len = recv(amf_conn, &ngap, sizeof(ngap), MSG_WAITALL);
         if (len == 0){
             printf("[gNB][Rec] AMF disconnected\n");
             break;
@@ -285,30 +295,48 @@ static void *ngap_receiver_thread(void *arg)
 
         if (enq_ret == ENQUEUE_OK) {
             stat_enqueue_ok++;
+
         } else if (enq_ret == ENQUEUE_ERR_DUPLICATE) {
             stat_duplicate_ignored++;
-            printf("[gNB][DUP] Duplicate paging ignored | UE_ID=%u | target_sfn=%u | DUP=%lu\n",
-                req.ue_id,
-                req.sfn_to_send,
-                stat_duplicate_ignored);
-            fflush(stdout);
+
         } else if (enq_ret == ENQUEUE_ERR_FULL) {
             stat_queue_full_drop++;
-            printf("[gNB][DROP] Queue bucket full | UE_ID=%u | target_sfn=%u | bucket_size=%u | queue_total=%u | QUEUE_FULL_DROP=%lu\n",
+
+            printf("[gNB][DROP] Queue bucket full | UE_ID=0x%08X | target_sfn=%u | bucket_size=%u | queue_total=%u | QUEUE_FULL_DROP=%lu\n",
                 req.ue_id,
                 req.sfn_to_send,
                 bucket_size,
                 total_queue_size,
                 stat_queue_full_drop);
             fflush(stdout);
+
+        } else if (enq_ret == ENQUEUE_ERR_INVALID) {
+            stat_enqueue_invalid++;
+
+            printf("[gNB][ENQ_INVALID] UE_ID=0x%08X | target_sfn=%u | ret=%d\n",
+                req.ue_id,
+                req.sfn_to_send,
+                enq_ret);
+            fflush(stdout);
+
+        } else {
+            stat_enqueue_other++;
+
+            printf("[gNB][ENQ_OTHER] UE_ID=0x%08X | target_sfn=%u | ret=%d\n",
+                req.ue_id,
+                req.sfn_to_send,
+                enq_ret);
+            fflush(stdout);
         }
 
 
-        // printf("[gNB][Rec] RX NGAP Paging | UE_ID=%u | current_sfn=%u | target_sfn=%u\n",
-        //        req.ue_id,
-        //        gnb_sfn,
-        //        req.sfn_to_send);
-
+        printf("[gNB][Rec][NGAP] UE_ID=0x%08X | current_sfn=%u | target_sfn=%u | enq_ret=%d | bucket_size=%u | queue_total=%u\n",
+            req.ue_id,
+            gnb_sfn,
+            req.sfn_to_send,
+            enq_ret,
+            bucket_size,
+            total_queue_size);
         fflush(stdout);
     }
     // running = 0;
@@ -321,13 +349,15 @@ static void print_gnb_stats(void)
 
     uint32_t queue_size = queue_total_size(&paging_q);
 
-    printf("[gNB][STAT] NGAP_RX=%lu | ENQ_OK=%lu | ENQ_DROP=%lu | RRC_BATCH_SENT=%lu | RRC_RECORDS_SENT=%lu | RRC_SEND_FAIL=%lu | QUEUE_SIZE=%u\n",
+    printf("[gNB][STAT] NGAP_RX=%lu | ENQ_OK=%lu | ENQ_DUP=%lu | ENQ_FULL_DROP=%lu | RRC_BATCH_SENT=%lu | RRC_RECORDS_SENT=%lu | RRC_SEND_FAIL=%lu | MIB_SEND_FAIL=%lu | QUEUE_SIZE=%u |\n",
        stat_ngap_rx,
        stat_enqueue_ok,
-       stat_enqueue_drop,
+       stat_duplicate_ignored,
+       stat_queue_full_drop,
        stat_rrc_batch_sent,
        stat_rrc_records_sent,
        stat_rrc_send_fail,
+       stat_mib_send_fail,
        queue_size);
 
     fflush(stdout);

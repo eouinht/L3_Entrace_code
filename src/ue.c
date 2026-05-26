@@ -27,7 +27,7 @@ static uint64_t ue_tick_count = 0;
 static void print_ue_stats(void)
 {
 
-    printf("[UE %u][STAT] MIB_RX=%lu | RRC_BATCH_RX=%lu | OWN_RRC_RX=%lu | NOT_FOR_UE=%lu | INVALID_RRC=%lu | NOT_SYNCED=%lu | WRONG_PF=%lu | UE_SFN=%u |\n",
+    printf("[UE %u][STAT] MIB_RX=%lu | RRC_BATCH_RX=%lu | OWN_RRC_RX=%lu | NOT_FOR_UE=%lu | INVALID_RRC=%lu | NOT_SYNCED=%lu | WRONG_PF=%lu |\n",
            ue_id,
            total_mib,
            total_rrc_batch,
@@ -35,8 +35,8 @@ static void print_ue_stats(void)
            total_rrc_not_for_ue,
            total_rrc_invalid,
            total_rrc_not_synced,
-           total_rrc_wrong_pf,
-           ue_sfn);
+           total_rrc_wrong_pf
+           );
     fflush(stdout);
 }
 

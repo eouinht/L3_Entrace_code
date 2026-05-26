@@ -10,6 +10,27 @@
 #include "timer.h"
 #include "amf.h"
 
+static const uint32_t watched_ue_ids[] =  {
+    // UE_ID        
+    0x11111040,   
+    0x22222081,  
+    0x333330C2,  
+    0x44444103,   
+    0x55555144    
+};
+#define WATCHED_PROB_PERCENT 1
+#define WATCHED_UE_COUNT ((uint32_t)(sizeof(watched_ue_ids) / sizeof(watched_ue_ids[0])))
+#define WATCHED_INSERT_INTERVAL 500
+
+typedef struct {
+    uint32_t ue_id;
+    uint64_t count;
+    uint64_t last_send_ms;
+    uint64_t sum_delta_ms;
+    uint64_t min_delta_ms;
+    uint64_t max_delta_ms;
+} watched_ue_stat_t;
+
 static uint32_t random_ue_id(){
     uint32_t value = 0;
     value |= ((uint32_t)(rand() & 0xFF)) << 24;
@@ -18,6 +39,112 @@ static uint32_t random_ue_id(){
     value |= ((uint32_t)(rand() & 0xFF));
     return value;
 }
+
+static uint32_t choose_ue_id(uint64_t seq)
+{
+    static uint32_t watched_rr_index = 0;
+
+    if (seq % WATCHED_INSERT_INTERVAL == 0) {
+        uint32_t idx = watched_rr_index % WATCHED_UE_COUNT;
+        watched_rr_index++;
+
+        return watched_ue_ids[idx];
+    }
+
+    return random_ue_id();
+}
+
+static int find_watched_index(uint32_t ue_id)
+{
+    for (uint32_t i = 0; i < WATCHED_UE_COUNT; i++) {
+        if (watched_ue_ids[i] == ue_id) {
+            return (int)i;
+        }
+    }
+
+    return -1;
+}
+static void build_sfn_list_string(
+    uint32_t UE_ID,
+    char *buf,
+    size_t buf_size
+)
+{
+    if (buf == NULL || buf_size == 0) {
+        return;
+    }
+
+    buf[0] = '\0';
+
+    /*
+     * Công thức:
+     * ue_id = UE_ID % 1024
+     * target_offset = (T / N) * (ue_id % N)
+     *
+     * Với T = 64, N = 64:
+     * target_offset = UE_ID % 64
+     */
+
+    uint32_t ue_id = UE_ID % SFN_MOD;
+    uint32_t target_offset = (T / N) * (ue_id % N);
+
+    for (uint16_t sfn = 0; sfn < SFN_MOD; sfn++) {
+        if (((sfn + PF_OFFSET) % T) == target_offset){
+            char tmp[32];
+
+            snprintf(tmp, sizeof(tmp), "%u ", sfn);
+
+            if (strlen(buf) + strlen(tmp) + 1 < buf_size){
+                strcat(buf, tmp);
+            }
+        }
+    }
+}
+
+static int export_ue_sfn_list_csv(
+    const char *path,
+    const uint32_t *ue_list,
+    uint32_t ue_count
+)
+{
+    FILE *fp = fopen(path, "w");
+    if (fp == NULL) {
+        perror("[AMF] fopen ue_sfn_list csv");
+        return -1;
+    }
+
+    /*
+     * Excel columns:
+     * 1. ue_id_hex  : UE ID in hexadecimal
+     * 2. ue_id_dec  : UE ID in decimal
+     * 3. sfn_list   : all valid SFNs for this UE
+     */
+    fprintf(fp, "ue_id_hex,ue_id_dec,sfn_list\n");
+
+    for (uint32_t i = 0; i < ue_count; i++) {
+        char sfn_list[512];
+
+        build_sfn_list_string(
+            ue_list[i],
+            sfn_list,
+            sizeof(sfn_list)
+        );
+
+        fprintf(fp, "\"\"\"0x%08X\"\"\",%u,%s\n",
+            ue_list[i],
+            ue_list[i],
+            sfn_list);
+    }
+
+    fclose(fp);
+
+    printf("[AMF] Exported UE SFN list to %s\n", path);
+    fflush(stdout);
+
+    return 0;
+}
+
+
 static int connect_to_gnb(void)
 {
     int tcp_skt = socket(AF_INET, SOCK_STREAM, 0);
@@ -73,11 +200,6 @@ static int send_ngap_paging(int tcp_skt, uint32_t ue_id)
     return 0;
 }
 
-static uint64_t now_ms(void){
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return ((uint64_t)ts.tv_sec*1000ULL) + ts.tv_nsec/1000000ULL;
-}
 
 /*
  * ============================================================
@@ -125,45 +247,41 @@ static void run_single_mode(int tcp_skt, uint32_t ue_id)
 static void run_load_mode(
     int tcp_skt,
     uint32_t rate,
-    uint32_t duration_sec,
-    const uint32_t *ue_id_list,
-    uint32_t num_ue
-)
-{
+    uint32_t duration_sec
+){
     if (rate == 0) {
         printf("[AMF] Invalid rate=0\n");
         return;
     }
 
-    if (num_ue == 0) {
-        printf("[AMF] Invalid num_ue=0\n");
-        return;
-    }
     uint64_t total = (uint64_t)rate * duration_sec;
     long interval_ns = 1000000000L / rate;
-    double expected_period_ms = ((double)num_ue*1000.0)/(double)rate;
 
-    
-    uint64_t *paging_count_per_ue = calloc(num_ue, sizeof(uint64_t));
-    uint64_t *last_send_ms = calloc(num_ue, sizeof(uint64_t));
-
-    if (paging_count_per_ue == NULL || last_send_ms == NULL ) 
-    {
-        perror("[AMF] calloc");
-        free(paging_count_per_ue);
-        free(last_send_ms);
-        return;
-    }
-
+    uint64_t total_sent = 0;
+    uint64_t watched_sent = 0;
+    uint64_t random_sent = 0;
+   
+    uint64_t watched_count[WATCHED_UE_COUNT];
+    memset(watched_count, 0, sizeof(watched_count));
 
     printf("[AMF] Load mode\n");
     printf("[AMF] rate=%d msg/s | duration=%d s | total=%ld\n",
            rate, duration_sec, total);
     
+    printf("[AMF] watched_probability=%d%%\n", WATCHED_PROB_PERCENT);
+    for (uint32_t i = 0; i < WATCHED_UE_COUNT; i++) {
+        printf("[AMF][WATCHED] index=%u | UE_ID=0x%08X \n",
+               i,
+               watched_ue_ids[i]
+              );
+    }
+    fflush(stdout);
+
+    
     for (uint64_t i = 0; i < total; i++) {
-        
-        uint32_t ue_index = (uint32_t)(i % num_ue);
-        uint32_t ue_id = ue_id_list[ue_index];     
+        uint32_t ue_id = choose_ue_id(i);  
+      
+
         if (send_ngap_paging(tcp_skt, ue_id) < 0) {
             printf("[AMF] Stop load mode because send failed | seq=%lu | UE_ID=0x%08X\n",
                    i + 1,
@@ -171,139 +289,133 @@ static void run_load_mode(
             fflush(stdout);
             break;
         }
-        uint64_t t_now = now_ms();
-        
-        if(last_send_ms[ue_index] == 0){
-            printf("[AMF][Send] Seq=%lu | UE_ID=%u | first_send | expected_period=%2.7f ms\n", i+1, ue_id, expected_period_ms);
+        total_sent++;
+        int watched_idx = find_watched_index(ue_id);
 
-        }else{
-            uint64_t delta_ms = t_now - last_send_ms[ue_index];
-            printf("[AMF][Send] Seq=%lu | UE_ID=%u | delta_since_last=%lu ms | expected_period=%2.7f ms\n", i+1, ue_id, delta_ms, expected_period_ms);
+        if (watched_idx >= 0) {
+            watched_count[watched_idx]++;
+            watched_sent++;
+        } else {
+            random_sent++;
         }
+
+        printf("[AMF][SEND] seq=%lu | UE_ID=0x%08X \n",
+               i,
+               ue_id
+               );
         fflush(stdout);
-        last_send_ms[ue_index] = t_now;
-        paging_count_per_ue[ue_index]++;
         // printf("[AMF] Send NGAP Paging | UE_ID=%u\n", ue_id);
         sleep_ns(interval_ns);
     }
     
-
-    printf("\n[AMF][SUMMARY] NGAP Paging count per UE\n");
-    printf("[AMF][SUMMARY] --------------------------------\n");
-    uint64_t total_sent = 0;
-    for (uint32_t i = 0; i < num_ue; i++) {
-        uint32_t ue_id = ue_id_list[i];
-        uint64_t count = paging_count_per_ue[i];
-        total_sent += count;
-
-        printf("[AMF][SUMMARY] UE_ID=%u | NGAP_PAGING_SENT=%lu\n",
-               ue_id,
-               count);
-    }
-
+    printf("\n[AMF][SUMMARY]\n");
     printf("[AMF][SUMMARY] TOTAL_SENT=%lu | EXPECTED_TOTAL=%lu\n",
            total_sent,
            total);
+    printf("[AMF][SUMMARY] WATCHED_SENT=%lu | RANDOM_SENT=%lu\n",
+           watched_sent,
+           random_sent);
+    printf("[AMF][SUMMARY] --------------------------------\n");
+
+    for (uint32_t i = 0; i < WATCHED_UE_COUNT; i++) {
+        double period_sec = 0.0;
+
+        if (watched_count[i] > 0) {
+            period_sec = (double)duration_sec / (double)watched_count[i];
+        }
+
+        printf("[AMF][SUMMARY] UE_ID=0x%08X | NGAP_SENT=%lu | avg_period=%.2f s/msg u\n",
+               watched_ue_ids[i],
+               watched_count[i],
+               period_sec);
+    }
+
     printf("[AMF][SUMMARY] --------------------------------\n\n");
     fflush(stdout);
-
-    free(paging_count_per_ue);
-    free(last_send_ms);
   
 
 }
 
-
-static int generate_ue_id_file(uint32_t num_ue, const char *path)
+static void run_fixed_ue_load_mode(
+    int tcp_skt,
+    uint32_t rate,
+    uint32_t duration_sec,
+    uint32_t ue_id
+)
 {
-    FILE *fp = fopen(path, "w");
-    if (fp == NULL) {
-        perror("[AMF] fopen ue id file");
-        return -1;
+    if (rate == 0) {
+        printf("[AMF] Invalid rate=0\n");
+        return;
     }
 
-    for (uint32_t i = 0; i < num_ue; i++) {
-        uint32_t ue_id = random_ue_id();
+    uint64_t total = (uint64_t)rate * duration_sec;
+    long interval_ns = 1000000000L / rate;
 
-        fprintf(fp, "0x%08X\n", ue_id);
-    }
+    uint64_t sent_count = 0;
 
-    fclose(fp);
-
-    printf("[AMF] Generated %u UE IDs into %s\n", num_ue, path);
+    printf("[AMF] Fixed UE load mode\n");
+    printf("[AMF] rate=%u msg/s | duration=%u s | total=%lu\n",
+           rate,
+           duration_sec,
+           total);
+    printf("[AMF] target UE_ID=0x%08X | UE_ID_DEC=%u\n",
+           ue_id,
+           ue_id);
     fflush(stdout);
 
-    return 0;
-}
-
-static uint32_t *load_ue_id_file(const char *path, uint32_t *out_num_ue)
-{
-    FILE *fp = fopen(path, "r");
-    if (fp == NULL) {
-        perror("[AMF] fopen ue_id_file");
-        return NULL;
-    }
-
-    uint32_t capacity = 1024;
-    uint32_t count = 0;
-
-    uint32_t *list = calloc(capacity, sizeof(uint32_t));
-    if (list == NULL) {
-        perror("[AMF] calloc ue_id_list");
-        fclose(fp);
-        return NULL;
-    }
-
-    char line[128];
-
-    while (fgets(line, sizeof(line), fp) != NULL) {
-        if (count >= capacity) {
-            capacity *= 2;
-
-            uint32_t *new_list = realloc(list, capacity * sizeof(uint32_t));
-            if (new_list == NULL) {
-                perror("[AMF] realloc ue_id_list");
-                free(list);
-                fclose(fp);
-                return NULL;
-            }
-
-            list = new_list;
+    for (uint64_t seq = 0; seq < total; seq++) {
+        if (send_ngap_paging(tcp_skt, ue_id) < 0) {
+            printf("[AMF] Stop fixed UE mode because send failed | seq=%lu | UE_ID=0x%08X\n",
+                   seq,
+                   ue_id);
+            fflush(stdout);
+            break;
         }
 
-        /*
-         * base = 0 để đọc được cả:
-         *   1001
-         *   0xA13F92C0
-         */
-        list[count] = (uint32_t)strtoul(line, NULL, 0);
-        count++;
+        sent_count++;
+
+        printf("[AMF][SEND] seq=%lu | mode=FIXED | UE_ID=0x%08X | UE_ID_DEC=%u\n",
+               seq,
+               ue_id,
+               ue_id);
+        fflush(stdout);
+
+        sleep_ns(interval_ns);
     }
 
-    fclose(fp);
+    double avg_period_sec = 0.0;
+    if (sent_count > 0) {
+        avg_period_sec = (double)duration_sec / (double)sent_count;
+    }
 
-    *out_num_ue = count;
-    return list;
+    printf("\n[AMF][SUMMARY] mode=FIXED\n");
+    printf("[AMF][SUMMARY] UE_ID=0x%08X | UE_ID_DEC=%u | NGAP_SENT=%lu | avg_period=%.2f s/msg\n",
+           ue_id,
+           ue_id,
+           sent_count,
+           avg_period_sec);
+    printf("[AMF][SUMMARY] EXPECTED_TOTAL=%lu | ACTUAL_SENT=%lu\n\n",
+           total,
+           sent_count);
+    fflush(stdout);
 }
+
 int main(int argc, char **argv)
 {
     srand((unsigned int)time(NULL));
-
-    /*
-     * Generate UE ID file:
-     *   ./amf --gen-ids <num_ue> <ue_id_file>
-     */
-    if (argc == 4 && strcmp(argv[1], "--gen-ids") == 0) {
-        uint32_t num_ue = (uint32_t)strtoul(argv[2], NULL, 10);
-        const char *ue_id_file = argv[3];
-
-        return generate_ue_id_file(num_ue, ue_id_file);
-    }
+    export_ue_sfn_list_csv(
+        "logs/ue_sfn_list.csv",
+        watched_ue_ids,
+        WATCHED_UE_COUNT
+    );
 
     int tcp_skt = connect_to_gnb();
-    if (tcp_skt < 0) {
-        return 1;
-    }
+        if (tcp_skt < 0) {
+            return 1;
+        }
+
+
+    
 
     /*
      * Single mode:
@@ -337,40 +449,35 @@ int main(int argc, char **argv)
      * Example:
      *   ./amf 500 3600 logs/ue_ids.txt
      */
-    } else if (argc == 4) {
+    } else if (argc == 3) {
         uint32_t rate = (uint32_t)strtoul(argv[1], NULL, 10);
         uint32_t duration_sec = (uint32_t)strtoul(argv[2], NULL, 10);
-        const char *ue_id_file = argv[3];
-
-        uint32_t num_ue = 0;
-        uint32_t *ue_id_list = load_ue_id_file(ue_id_file, &num_ue);
-
-        if (ue_id_list == NULL || num_ue == 0) {
-            printf("[AMF] Failed to load UE IDs from %s\n", ue_id_file);
-            free(ue_id_list);
-            close(tcp_skt);
-            return 1;
-        }
-
-        printf("[AMF] Loaded %u UE IDs from %s\n", num_ue, ue_id_file);
-        fflush(stdout);
 
         run_load_mode(
             tcp_skt,
             rate,
-            duration_sec,
-            ue_id_list,
-            num_ue
-        );
+            duration_sec );
 
-        free(ue_id_list);
+    }  else if (argc == 4) {
+    uint32_t rate = (uint32_t)strtoul(argv[1], NULL, 10);
+    uint32_t duration_sec = (uint32_t)strtoul(argv[2], NULL, 10);
+    uint32_t ue_id = (uint32_t)strtoul(argv[3], NULL, 0);
 
-    } else {
-        printf("Usage:\n");
+    /*
+     * Functional fixed UE mode:
+     * ./amf <rate> <duration_sec> <ue_id>
+     */
+    run_fixed_ue_load_mode(tcp_skt, rate, duration_sec, ue_id);
+    }else {
+         printf("Usage:\n");
         printf("  %s\n", argv[0]);
         printf("  %s <ue_id>\n", argv[0]);
-        printf("  %s --gen-ids <num_ue> <ue_id_file>\n", argv[0]);
-        printf("  %s <rate> <duration_sec> <ue_id_file>\n", argv[0]);
+        printf("  %s <rate> <duration_sec>\n", argv[0]);
+        printf("  %s <rate> <duration_sec> <ue_id>\n", argv[0]);
+        printf("\nExamples:\n");
+        printf("  %s 0x11111040\n", argv[0]);
+        printf("  %s 500 3600\n", argv[0]);
+        printf("  %s 1 60 0x11111040\n", argv[0]);
     }
 
     close(tcp_skt);
